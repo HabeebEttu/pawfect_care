@@ -1,0 +1,1 @@
+enum Status { CANCELLED, APPROVED ,PENDING}
