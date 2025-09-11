@@ -1,0 +1,29 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "pawfect-care-849d1",
+          "appId": "1:707064458562:android:08d3736af58413ab6decdb",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "pawfect-care-849d1",
+          "configurations": {
+            "android": "1:707064458562:android:08d3736af58413ab6decdb",
+            "ios": "1:707064458562:ios:374f52b8f6d077796decdb",
+            "web": "1:707064458562:web:02a802002fd9e7896decdb"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "africa-south1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
