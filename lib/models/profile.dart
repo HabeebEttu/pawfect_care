@@ -1,6 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+import 'package:pawfect_care/models/pet.dart';
+
 class Profile {
   final String? photoUrl;
   final String? address;
@@ -9,8 +13,9 @@ class Profile {
   final String? zipCode;
   final String? country;
   final String? bio;
-  final String? uid;
-
+  final String uid;
+  final Pet? pet;
+  final List<Pet>? favorites;
   Profile({
     this.photoUrl,
     this.address,
@@ -19,7 +24,9 @@ class Profile {
     this.zipCode,
     this.country,
     this.bio,
-    this.uid,
+    required this.uid,
+    this.pet,
+    this.favorites,
   });
 
   Profile copyWith({
@@ -31,6 +38,8 @@ class Profile {
     String? country,
     String? bio,
     String? uid,
+    Pet? pet,
+    List<Pet>? favorites,
   }) {
     return Profile(
       photoUrl: photoUrl ?? this.photoUrl,
@@ -41,6 +50,8 @@ class Profile {
       country: country ?? this.country,
       bio: bio ?? this.bio,
       uid: uid ?? this.uid,
+      pet: pet ?? this.pet,
+      favorites: favorites ?? this.favorites,
     );
   }
 
@@ -54,6 +65,8 @@ class Profile {
       'country': country,
       'bio': bio,
       'uid': uid,
+      'pet': pet?.toMap(),
+      'favorites': favorites!.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -66,17 +79,20 @@ class Profile {
       zipCode: map['zipCode'] != null ? map['zipCode'] as String : null,
       country: map['country'] != null ? map['country'] as String : null,
       bio: map['bio'] != null ? map['bio'] as String : null,
-      uid: map['uid'] != null ? map['uid'] as String : null,
+      uid: map['uid'] as String,
+      pet: map['pet'] != null ? Pet.fromMap(map['pet'] as Map<String,dynamic>) : null,
+      favorites: map['favorites'] != null ? List<Pet>.from((map['favorites'] as List<int>).map<Pet?>((x) => Pet.fromMap(x as Map<String,dynamic>),),) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Profile.fromJson(String source) => Profile.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Profile.fromJson(String source) =>
+      Profile.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Profile(photoUrl: $photoUrl, address: $address, city: $city, state: $state, zipCode: $zipCode, country: $country, bio: $bio, uid: $uid)';
+    return 'Profile(photoUrl: $photoUrl, address: $address, city: $city, state: $state, zipCode: $zipCode, country: $country, bio: $bio, uid: $uid, pet: $pet, favorites: $favorites)';
   }
 
   @override
@@ -91,7 +107,9 @@ class Profile {
       other.zipCode == zipCode &&
       other.country == country &&
       other.bio == bio &&
-      other.uid == uid;
+      other.uid == uid &&
+      other.pet == pet &&
+      listEquals(other.favorites, favorites);
   }
 
   @override
@@ -103,6 +121,8 @@ class Profile {
       zipCode.hashCode ^
       country.hashCode ^
       bio.hashCode ^
-      uid.hashCode;
+      uid.hashCode ^
+      pet.hashCode ^
+      favorites.hashCode;
   }
 }

@@ -1,21 +1,27 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/models/profile.dart';
 
 class User {
   final String email;
   final String name;
   final String password;
-  final String phone;
+  final String? phone;
   final Profile profile;
+  final String userId;
   
+
   User({
     required this.email,
     required this.name,
     required this.password,
-    required this.phone,
-    required this.profile
+    this.phone,
+    required this.profile,
+    required this.userId,
   });
 
   User copyWith({
@@ -24,6 +30,7 @@ class User {
     String? password,
     String? phone,
     Profile? profile,
+    String? userId,
   }) {
     return User(
       email: email ?? this.email,
@@ -31,6 +38,7 @@ class User {
       password: password ?? this.password,
       phone: phone ?? this.phone,
       profile: profile ?? this.profile,
+      userId: userId ?? this.userId,
     );
   }
 
@@ -41,6 +49,7 @@ class User {
       'password': password,
       'phone': phone,
       'profile': profile.toMap(),
+      'userId': userId,
     };
   }
 
@@ -49,8 +58,9 @@ class User {
       email: map['email'] as String,
       name: map['name'] as String,
       password: map['password'] as String,
-      phone: map['phone'] as String,
+      phone: map['phone'] != null ? map['phone'] as String : null,
       profile: Profile.fromMap(map['profile'] as Map<String,dynamic>),
+      userId: map['userId'] as String,
     );
   }
 
@@ -61,7 +71,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(email: $email, name: $name, password: $password, phone: $phone, profile: $profile)';
+    return 'User(email: $email, name: $name, password: $password, phone: $phone, profile: $profile, userId: $userId)';
   }
 
   @override
@@ -73,7 +83,8 @@ class User {
       other.name == name &&
       other.password == password &&
       other.phone == phone &&
-      other.profile == profile;
+      other.profile == profile &&
+      other.userId == userId;
   }
 
   @override
@@ -82,6 +93,7 @@ class User {
       name.hashCode ^
       password.hashCode ^
       phone.hashCode ^
-      profile.hashCode;
+      profile.hashCode ^
+      userId.hashCode;
   }
 }

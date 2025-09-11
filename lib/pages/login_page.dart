@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,12 +16,11 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
- bool _isObscure = true;
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Form(
         key: _formKey,
         child: Padding(
@@ -28,88 +31,101 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
-                vertical:40,
-                ),
-                child: Text('Login',style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                     color: Colors.teal[700],
                     fontWeight: FontWeight.w900,
-                ),),
-              ),
-              _buildFormField(context,"Email","Enter your email address", (
-                value,
-              ) {
-                String email = _emailController.text;
-                if (email.isEmpty) {
-                  return "Please enter your email";
-                } else if (!EmailValidator.validate(email)) {
-                  return "Please enter a valid email";
-                } else {
-                  return null;
-                }
-              },
-              false,
-              _emailController,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              _buildFormField(context,"Password","Enter your account password", (
-                value,
-              ) {
-                String password = _passwordController.text;
-                if (password.isEmpty) {
-                  return "Please enter your password";
-                } else if (password.length < 6) {
-                  return "Password length is too short";
-                } else {
-                  return null;
-                }
-              },
-              true,
-              _passwordController,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              _buildForgotPassword(context),
-              SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade700, 
-                  minimumSize: Size(double.infinity, 50),
-                   elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  )
                   ),
-                onPressed: () {},
-                child: Text('Log In',style:Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                )),
+                ),
               ),
-              SizedBox(
-                height: 15,
+              _buildFormField(
+                context,
+                "Email",
+                "Enter your email address",
+                (value) {
+                  String email = _emailController.text;
+                  if (email.isEmpty) {
+                    return "Please enter your email";
+                  } else if (!EmailValidator.validate(email)) {
+                    return "Please enter a valid email";
+                  } else {
+                    return null;
+                  }
+                },
+                false,
+                _emailController,
               ),
+              SizedBox(height: 20),
+              _buildFormField(
+                context,
+                "Password",
+                "Enter your account password",
+                (value) {
+                  String password = _passwordController.text;
+                  if (password.isEmpty) {
+                    return "Please enter your password";
+                  } else if (password.length < 6) {
+                    return "Password length is too short";
+                  } else {
+                    return null;
+                  }
+                },
+                true,
+                _passwordController,
+              ),
+              SizedBox(height: 5),
+              _buildForgotPassword(context),
+              SizedBox(height: 30),
+              Consumer<AuthProvider>(
+                builder: (context, authProvider, child) {
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal.shade700,
+                      minimumSize: Size(double.infinity, 50),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      String email = _emailController.text;
+                      String password = _passwordController.text;
+
+                      authProvider.signIn(email: email, password: password);
+                      if (authProvider.user != null) {
+                        log("message");
+                        Navigator.pushNamed(context, '/');
+                      }
+                    },
+                    child: authProvider.isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            'Log In',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                  );
+                },
+              ),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Dont have an account? '),
                   GestureDetector(
-                    onTap:(){
-                      
-                    },
-                    child: Text('SignUp here',style: TextStyle(
-                      decoration: TextDecoration.underline
-                    ),),
-                  )
-                ]
-
-              )
-
+                    onTap: () {},
+                    child: Text(
+                      'SignUp here',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -119,21 +135,21 @@ class _LoginPageState extends State<LoginPage> {
 
   Row _buildForgotPassword(BuildContext context) {
     return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
 
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: Text('Forgot Password?',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium!.copyWith(color: Colors.black87),
-                  ),
-                )
-              ],);
+      children: [
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            'Forgot Password?',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium!.copyWith(color: Colors.black87),
+          ),
+        ),
+      ],
+    );
   }
-
-
 
   Column _buildFormField(
     BuildContext context,
@@ -150,12 +166,14 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 5),
         TextFormField(
           controller: controller,
-          obscureText: isPassword ? _isObscure : false, // 👈 only obscure if password field
+          obscureText: isPassword
+              ? _isObscure
+              : false, // 👈 only obscure if password field
           decoration: InputDecoration(
             hintText: placeholder,
             hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: const Color.fromARGB(255, 124, 129, 124),
-                ),
+              color: const Color.fromARGB(255, 124, 129, 124),
+            ),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.grey[300]!,
