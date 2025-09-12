@@ -20,7 +20,7 @@ class AuthService {
     }
 
     try {
-      final result = await firestore.createUserWithEmailAndPassword(
+      final result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
