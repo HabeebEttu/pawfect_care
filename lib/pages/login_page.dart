@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -89,18 +88,47 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
+                    onPressed: authProvider.isLoading
+                        ? null
+                        : () {
+                            if (_formKey.currentState!.validate()) {
+                              String email = _emailController.text;
+                              String password = _passwordController.text;
 
-                      authProvider.signIn(email: email, password: password);
-                      if (authProvider.user != null) {
-                        log("message");
-                        Navigator.pushNamed(context, '/');
-                      }
-                    },
+                              authProvider
+                                  .signIn(email: email, password: password)
+                                  .then((_) {
+                                    if (authProvider.user != null) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage(),
+                                        ),
+                                      );
+                                    } else if (authProvider.errorMessage !=
+                                        null) {
+                                     
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              authProvider.errorMessage!,
+                                            ),
+                                          ),
+                                        );
+                                      
+                                    }
+                                  });
+                            }
+                          },
                     child: authProvider.isLoading
-                        ? CircularProgressIndicator()
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          )
                         : Text(
                             'Log In',
                             style: Theme.of(context).textTheme.bodyLarge!
@@ -136,7 +164,6 @@ class _LoginPageState extends State<LoginPage> {
   Row _buildForgotPassword(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-
       children: [
         GestureDetector(
           onTap: () {},

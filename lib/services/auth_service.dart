@@ -5,42 +5,42 @@ import 'package:pawfect_care/models/user.dart' as user;
 class AuthService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<User?> register(String name,String email, String password) async {
-    if (!isValidName(name)) {
-      throw Exception('Please enter a valid name.');
-    }
+  // Future<User?> register(String name,String email, String password) async {
+  //   if (!isValidName(name)) {
+  //     throw Exception('Please enter a valid name.');
+  //   }
 
-    if (!isValidEmail(email)) {
-      throw Exception('Please enter a valid email address.');
-    }
+  //   if (!isValidEmail(email)) {
+  //     throw Exception('Please enter a valid email address.');
+  //   }
 
-    if (!isValidPassword(password)) {
-      throw Exception('Password must be at least 6 characters long.');
-    }
+  //   if (!isValidPassword(password)) {
+  //     throw Exception('Password must be at least 6 characters long.');
+  //   }
 
-    try {
-      final result = await firestore.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
-      await result.user?.updateDisplayName(name);
-      await result.user?.reload();
-      return result.user;
-    } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'email-already-in-use':
-          throw Exception('This email is already in use.');
-        case 'invalid-email':
-          throw Exception('The email address is invalid.');
-        case 'weak-password':
-          throw Exception('The password is too weak.');
-        default:
-          throw Exception('Registration failed. Please try again.');
-      }
-    } catch (e) {
-      throw Exception('An unexpected error occurred.');
-    }
-  }
+  //   try {
+  //     final result = await firestore.createUserWithEmailAndPassword(
+  //       email: email.trim(),
+  //       password: password.trim(),
+  //     );
+  //     await result.user?.updateDisplayName(name);
+  //     await result.user?.reload();
+  //     return result.user;
+  //   } on FirebaseAuthException catch (e) {
+  //     switch (e.code) {
+  //       case 'email-already-in-use':
+  //         throw Exception('This email is already in use.');
+  //       case 'invalid-email':
+  //         throw Exception('The email address is invalid.');
+  //       case 'weak-password':
+  //         throw Exception('The password is too weak.');
+  //       default:
+  //         throw Exception('Registration failed. Please try again.');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('An unexpected error occurred.');
+  //   }
+  // }
 
   Future<UserCredential> signUpWithEmailAndPassword(
     String email,
