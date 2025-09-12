@@ -12,6 +12,9 @@ class Pet {
   String photoUrl;
   Gender gender;
   bool isVaccinated;
+  bool? isSpayed;
+  bool? isNeutered;
+  bool? isSpecialNeeds;
   Pet({
     required this.petId,
     required this.userId,
@@ -20,7 +23,10 @@ class Pet {
     required this.age,
     required this.photoUrl,
     required this.gender,
-    required this.isVaccinated
+    required this.isVaccinated,
+    this.isSpayed,
+    this.isNeutered,
+    this.isSpecialNeeds,
   });
 
   Pet copyWith({
@@ -31,7 +37,10 @@ class Pet {
     int? age,
     String? photoUrl,
     Gender? gender,
-    bool? isVaccinated
+    bool? isVaccinated,
+    bool? isSpayed,
+    bool? isNeutered,
+    bool? isSpecialNeeds,
   }) {
     return Pet(
       petId: petId ?? this.petId,
@@ -42,6 +51,9 @@ class Pet {
       photoUrl: photoUrl ?? this.photoUrl,
       gender: gender ?? this.gender,
       isVaccinated: isVaccinated ?? this.isVaccinated,
+      isSpayed: isSpayed ?? this.isSpayed,
+      isNeutered: isNeutered ?? this.isNeutered,
+      isSpecialNeeds: isSpecialNeeds ?? this.isSpecialNeeds,
     );
   }
 
@@ -55,6 +67,9 @@ class Pet {
       'photoUrl': photoUrl,
       'gender': gender.toString(),
       'isVaccinated': isVaccinated,
+      'isSpayed': isSpayed,
+      'isNeutered': isNeutered,
+      'isSpecialNeeds': isSpecialNeeds,
     };
   }
 
@@ -68,6 +83,9 @@ class Pet {
       photoUrl: map['photoUrl'] as String,
       gender: _genderFromString(map['gender'] as String),
       isVaccinated: map['isVaccinated'] as bool,
+      isSpayed: map['isSpayed'] as bool?,
+      isNeutered: map['isNeutered'] as bool?,
+      isSpecialNeeds: map['isSpecialNeeds'] as bool?,
     );
   }
   static Gender _genderFromString(String status) {
@@ -84,7 +102,7 @@ class Pet {
 
   @override
   String toString() {
-    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender , isVaccinated: $isVaccinated)';
+    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds)';
   }
 
   @override
@@ -98,7 +116,10 @@ class Pet {
         other.age == age &&
         other.photoUrl == photoUrl &&
         other.gender == gender &&
-        other.isVaccinated == isVaccinated;
+        other.isVaccinated == isVaccinated &&
+        other.isSpayed == isSpayed &&
+        other.isNeutered == isNeutered &&
+        other.isSpecialNeeds == isSpecialNeeds;
   }
 
   @override
@@ -110,6 +131,9 @@ class Pet {
         age.hashCode ^
         photoUrl.hashCode ^
         gender.hashCode ^
-        isVaccinated.hashCode;
+        isVaccinated.hashCode ^
+        isSpayed.hashCode ^
+        isNeutered.hashCode ^
+        isSpecialNeeds.hashCode;
   }
 }
