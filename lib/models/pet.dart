@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:pawfect_care/models/gender.dart';
+
 class Pet {
   String petId;
   String userId;
@@ -8,7 +10,8 @@ class Pet {
   String species;
   int age;
   String photoUrl;
-  String gender;
+  Gender gender;
+  bool isVaccinated;
   Pet({
     required this.petId,
     required this.userId,
@@ -17,6 +20,7 @@ class Pet {
     required this.age,
     required this.photoUrl,
     required this.gender,
+    required this.isVaccinated
   });
 
   Pet copyWith({
@@ -26,7 +30,8 @@ class Pet {
     String? species,
     int? age,
     String? photoUrl,
-    String? gender,
+    Gender? gender,
+    bool? isVaccinated
   }) {
     return Pet(
       petId: petId ?? this.petId,
@@ -36,6 +41,7 @@ class Pet {
       age: age ?? this.age,
       photoUrl: photoUrl ?? this.photoUrl,
       gender: gender ?? this.gender,
+      isVaccinated: isVaccinated ?? this.isVaccinated,
     );
   }
 
@@ -47,7 +53,8 @@ class Pet {
       'species': species,
       'age': age,
       'photoUrl': photoUrl,
-      'gender': gender,
+      'gender': gender.toString(),
+      'isVaccinated': isVaccinated,
     };
   }
 
@@ -59,41 +66,50 @@ class Pet {
       species: map['species'] as String,
       age: map['age'] as int,
       photoUrl: map['photoUrl'] as String,
-      gender: map['gender'] as String,
+      gender: _genderFromString(map['gender'] as String),
+      isVaccinated: map['isVaccinated'] as bool,
+    );
+  }
+  static Gender _genderFromString(String status) {
+    return Gender.values.firstWhere(
+      (e) => e.toString().split('.').last == status,
+      orElse: () => Gender.male,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Pet.fromJson(String source) => Pet.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Pet.fromJson(String source) =>
+      Pet.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender)';
+    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender , isVaccinated: $isVaccinated)';
   }
 
   @override
   bool operator ==(covariant Pet other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.petId == petId &&
-      other.userId == userId &&
-      other.name == name &&
-      other.species == species &&
-      other.age == age &&
-      other.photoUrl == photoUrl &&
-      other.gender == gender;
+
+    return other.petId == petId &&
+        other.userId == userId &&
+        other.name == name &&
+        other.species == species &&
+        other.age == age &&
+        other.photoUrl == photoUrl &&
+        other.gender == gender &&
+        other.isVaccinated == isVaccinated;
   }
 
   @override
   int get hashCode {
     return petId.hashCode ^
-      userId.hashCode ^
-      name.hashCode ^
-      species.hashCode ^
-      age.hashCode ^
-      photoUrl.hashCode ^
-      gender.hashCode;
+        userId.hashCode ^
+        name.hashCode ^
+        species.hashCode ^
+        age.hashCode ^
+        photoUrl.hashCode ^
+        gender.hashCode ^
+        isVaccinated.hashCode;
   }
 }
