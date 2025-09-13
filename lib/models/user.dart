@@ -1,10 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-
-import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/models/profile.dart';
+import 'package:pawfect_care/models/role.dart';
 
 class User {
   final String email;
@@ -13,7 +10,7 @@ class User {
   final String? phone;
   final Profile profile;
   final String userId;
-  
+  final Role role;
 
   User({
     required this.email,
@@ -22,6 +19,7 @@ class User {
     this.phone,
     required this.profile,
     required this.userId,
+    this.role = Role.user,
   });
 
   User copyWith({
@@ -31,6 +29,7 @@ class User {
     String? phone,
     Profile? profile,
     String? userId,
+    Role? role,
   }) {
     return User(
       email: email ?? this.email,
@@ -39,6 +38,7 @@ class User {
       phone: phone ?? this.phone,
       profile: profile ?? this.profile,
       userId: userId ?? this.userId,
+      role: role ?? this.role,
     );
   }
 
@@ -50,6 +50,7 @@ class User {
       'phone': phone,
       'profile': profile.toMap(),
       'userId': userId,
+      'role': role.toString(),
     };
   }
 
@@ -59,8 +60,9 @@ class User {
       name: map['name'] as String,
       password: map['password'] as String,
       phone: map['phone'] != null ? map['phone'] as String : null,
-      profile: Profile.fromMap(map['profile'] as Map<String,dynamic>),
+      profile: Profile.fromMap(map['profile'] as Map<String, dynamic>),
       userId: map['userId'] as String,
+      role: Role.values.firstWhere((e) => e.toString() == map['role']),
     );
   }
 
@@ -71,29 +73,30 @@ class User {
 
   @override
   String toString() {
-    return 'User(email: $email, name: $name, password: $password, phone: $phone, profile: $profile, userId: $userId)';
+    return 'User(email: $email, name: $name, password: $password, phone: $phone, profile: $profile, userId: $userId, role: $role)';
   }
 
   @override
   bool operator ==(covariant User other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.email == email &&
-      other.name == name &&
-      other.password == password &&
-      other.phone == phone &&
-      other.profile == profile &&
-      other.userId == userId;
+
+    return other.email == email &&
+        other.name == name &&
+        other.password == password &&
+        other.phone == phone &&
+        other.profile == profile &&
+        other.userId == userId &&
+        other.role == role;
   }
 
   @override
   int get hashCode {
     return email.hashCode ^
-      name.hashCode ^
-      password.hashCode ^
-      phone.hashCode ^
-      profile.hashCode ^
-      userId.hashCode;
+        name.hashCode ^
+        password.hashCode ^
+        phone.hashCode ^
+        profile.hashCode ^
+        userId.hashCode ^
+        role.hashCode;
   }
 }

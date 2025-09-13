@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:convert';
 
 import 'package:pawfect_care/models/status.dart';
@@ -7,16 +7,18 @@ class Appointment {
   String appointmentId;
   String petId;
   String vetId;
-  DateTime appointmentTime;
+  DateTime? appointmentTime;
   Status appointmentStatus;
-  String notes;
+  String? notes;
+  String service;
   Appointment({
     required this.appointmentId,
     required this.petId,
     required this.vetId,
-    required this.appointmentTime,
+    this.appointmentTime,
     required this.appointmentStatus,
-    required this.notes,
+    this.notes,
+    required this.service,
   });
 
   Appointment copyWith({
@@ -26,6 +28,7 @@ class Appointment {
     DateTime? appointmentTime,
     Status? appointmentStatus,
     String? notes,
+    String? service,
   }) {
     return Appointment(
       appointmentId: appointmentId ?? this.appointmentId,
@@ -34,6 +37,7 @@ class Appointment {
       appointmentTime: appointmentTime ?? this.appointmentTime,
       appointmentStatus: appointmentStatus ?? this.appointmentStatus,
       notes: notes ?? this.notes,
+      service: service ?? this.service,
     );
   }
 
@@ -42,9 +46,10 @@ class Appointment {
       'appointmentId': appointmentId,
       'petId': petId,
       'vetId': vetId,
-      'appointmentTime': appointmentTime.millisecondsSinceEpoch,
-      'appointmentStatus': appointmentStatus.toString(),
+      'appointmentTime': appointmentTime?.millisecondsSinceEpoch,
+      'appointmentStatus': appointmentStatus.name,
       'notes': notes,
+      'service': service,
     };
   }
 
@@ -53,46 +58,48 @@ class Appointment {
       appointmentId: map['appointmentId'] as String,
       petId: map['petId'] as String,
       vetId: map['vetId'] as String,
-      appointmentTime: DateTime.fromMillisecondsSinceEpoch(map['appointmentTime'] as int),
-      appointmentStatus: _statusFromString(map['appointmentStatus'] as String),
-      notes: map['notes'] as String,
+      appointmentTime: map['appointmentTime'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['appointmentTime'] as int)
+          : null,
+      appointmentStatus: Status.values.byName(
+        map['appointmentStatus'] as String,
+      ),
+      notes: map['notes'] != null ? map['notes'] as String : null,
+      service: map['service'] as String,
     );
   }
-  static Status _statusFromString(String status) {
-    return Status.values.firstWhere(
-      (e) => e.toString().split('.').last == status,
-      orElse: () => Status.PENDING, 
-    );
-  }
+
   String toJson() => json.encode(toMap());
 
-  factory Appointment.fromJson(String source) => Appointment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Appointment.fromJson(String source) =>
+      Appointment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Appointment(appointmentId: $appointmentId, petId: $petId, vetId: $vetId, appointmentTime: $appointmentTime, appointmentStatus: $appointmentStatus, notes: $notes)';
+    return 'Appointment(appointmentId: $appointmentId, petId: $petId, vetId: $vetId, appointmentTime: $appointmentTime, appointmentStatus: $appointmentStatus, notes: $notes, service: $service)';
   }
 
   @override
   bool operator ==(covariant Appointment other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.appointmentId == appointmentId &&
-      other.petId == petId &&
-      other.vetId == vetId &&
-      other.appointmentTime == appointmentTime &&
-      other.appointmentStatus == appointmentStatus &&
-      other.notes == notes;
+
+    return other.appointmentId == appointmentId &&
+        other.petId == petId &&
+        other.vetId == vetId &&
+        other.appointmentTime == appointmentTime &&
+        other.appointmentStatus == appointmentStatus &&
+        other.notes == notes &&
+        other.service == service;
   }
 
   @override
   int get hashCode {
     return appointmentId.hashCode ^
-      petId.hashCode ^
-      vetId.hashCode ^
-      appointmentTime.hashCode ^
-      appointmentStatus.hashCode ^
-      notes.hashCode;
+        petId.hashCode ^
+        vetId.hashCode ^
+        appointmentTime.hashCode ^
+        appointmentStatus.hashCode ^
+        notes.hashCode ^
+        service.hashCode;
   }
 }

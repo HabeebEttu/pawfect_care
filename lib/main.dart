@@ -1,15 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:pawfect_care/pages/pet_store/pet_store_page.dart';
+import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
-import 'package:pawfect_care/pages/home_page.dart';
+import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/pages/login_page.dart';
-import 'package:pawfect_care/providers/auth_provider.dart'; // Import your AuthProvider
+import 'package:pawfect_care/providers/auth_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp( riverpod.ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,13 +23,31 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider()..initialize(),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Pawfect Care",
-        home: HomePage(),
-        routes: {"/login": (context) => const LoginPage()},
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          // Show loading screen while theme is initializing
+          if (!themeProvider.isInitialized) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              ),
+            );
+          }
+
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: themeProvider.getThemeData(context),
+            
+            title: "Pawfect Care",
+            home: PetStorePage(),
+            routes: {"/login": (context) => const LoginPage()},
+          );
+        },
       ),
     );
   }

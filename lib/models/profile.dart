@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import 'package:pawfect_care/models/articles.dart';
 import 'package:pawfect_care/models/pet.dart';
 
 class Profile {
@@ -14,8 +15,10 @@ class Profile {
   final String? country;
   final String? bio;
   final String uid;
-  final Pet? pet;
+  final List<Pet>? pet;
   final List<Pet>? favorites;
+  final List<Articles>? savedArticles;
+  
   Profile({
     this.photoUrl,
     this.address,
@@ -27,6 +30,7 @@ class Profile {
     required this.uid,
     this.pet,
     this.favorites,
+    this.savedArticles,
   });
 
   Profile copyWith({
@@ -38,8 +42,9 @@ class Profile {
     String? country,
     String? bio,
     String? uid,
-    Pet? pet,
+    List<Pet>? pet,
     List<Pet>? favorites,
+    List<Articles>? savedArticles,
   }) {
     return Profile(
       photoUrl: photoUrl ?? this.photoUrl,
@@ -52,6 +57,7 @@ class Profile {
       uid: uid ?? this.uid,
       pet: pet ?? this.pet,
       favorites: favorites ?? this.favorites,
+      savedArticles: savedArticles ?? this.savedArticles,
     );
   }
 
@@ -65,8 +71,9 @@ class Profile {
       'country': country,
       'bio': bio,
       'uid': uid,
-      'pet': pet?.toMap(),
+      'pet': pet!.map((x) => x.toMap()).toList(),
       'favorites': favorites!.map((x) => x.toMap()).toList(),
+      'savedArticles': savedArticles!.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -80,8 +87,9 @@ class Profile {
       country: map['country'] != null ? map['country'] as String : null,
       bio: map['bio'] != null ? map['bio'] as String : null,
       uid: map['uid'] as String,
-      pet: map['pet'] != null ? Pet.fromMap(map['pet'] as Map<String,dynamic>) : null,
+      pet: map['pet'] != null ? List<Pet>.from((map['pet'] as List<int>).map<Pet?>((x) => Pet.fromMap(x as Map<String,dynamic>),),) : null,
       favorites: map['favorites'] != null ? List<Pet>.from((map['favorites'] as List<int>).map<Pet?>((x) => Pet.fromMap(x as Map<String,dynamic>),),) : null,
+      savedArticles: map['savedArticles'] != null ? List<Articles>.from((map['savedArticles'] as List<int>).map<Articles?>((x) => Articles.fromMap(x as Map<String,dynamic>),),) : null,
     );
   }
 
@@ -92,7 +100,7 @@ class Profile {
 
   @override
   String toString() {
-    return 'Profile(photoUrl: $photoUrl, address: $address, city: $city, state: $state, zipCode: $zipCode, country: $country, bio: $bio, uid: $uid, pet: $pet, favorites: $favorites)';
+    return 'Profile(photoUrl: $photoUrl, address: $address, city: $city, state: $state, zipCode: $zipCode, country: $country, bio: $bio, uid: $uid, pet: $pet, favorites: $favorites, savedArticles: $savedArticles)';
   }
 
   @override
@@ -108,8 +116,9 @@ class Profile {
       other.country == country &&
       other.bio == bio &&
       other.uid == uid &&
-      other.pet == pet &&
-      listEquals(other.favorites, favorites);
+      listEquals(other.pet, pet) &&
+      listEquals(other.favorites, favorites) &&
+      listEquals(other.savedArticles, savedArticles);
   }
 
   @override
@@ -123,6 +132,7 @@ class Profile {
       bio.hashCode ^
       uid.hashCode ^
       pet.hashCode ^
-      favorites.hashCode;
+      favorites.hashCode ^
+      savedArticles.hashCode;
   }
 }
