@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
               "Pawfect Care",
               style: Theme.of(
                 context,
-              ).textTheme.headlineMedium!.copyWith(color: Colors.black54),
+              ).textTheme.headlineSmall!.copyWith(color: Colors.black,fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
             automaticallyImplyLeading: false,
@@ -119,7 +119,6 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 5,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
