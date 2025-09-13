@@ -1,17 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
-import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/pages/login_page.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp( riverpod.ProviderScope(child: const MyApp()));
+  runApp(riverpod.ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
