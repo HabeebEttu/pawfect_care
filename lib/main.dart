@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
+import 'package:pawfect_care/pages/pet_profile_page.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
@@ -28,7 +29,6 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
-          // Show loading screen while theme is initializing
           if (!themeProvider.isInitialized) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
@@ -44,7 +44,8 @@ class MyApp extends StatelessWidget {
             
             title: "Pawfect Care",
             home: const AnimalShelterDashboard(),
-            routes: {"/login": (context) => const LoginPage()},
+            routes: {"/login": (context) => const LoginPage(),
+            '/pet_profile':(context)=>const PetProfilePage()},
           );
         },
       ),
