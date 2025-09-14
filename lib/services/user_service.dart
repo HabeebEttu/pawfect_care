@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawfect_care/models/pet.dart';
-import 'package:pawfect_care/models/pet_store_item.dart';
 import 'package:pawfect_care/models/user.dart';
 
 class UserService {
@@ -62,21 +61,7 @@ class UserService {
     return querySnapshot.docs.map((doc) => Pet.fromMap(doc.data())).toList();
   }
 
-  Future<void> addToWishList(PetStoreItem item, User u) async {
-    await _firestore
-        .collection('users')
-        .doc(u.userId)
-        .collection('wishlist')
-        .doc(item.id)
-        .set(item.toMap());
-  }
+  
 
-  Future<void> removeFromWishList(PetStoreItem item, User u) async {
-    await _firestore
-        .collection('users')
-        .doc(u.userId)
-        .collection('wishlist')
-        .doc(item.id)
-        .delete();  
-  }
+
 }

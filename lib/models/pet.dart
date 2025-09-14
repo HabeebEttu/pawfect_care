@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:pawfect_care/models/appointment.dart';
 import 'package:pawfect_care/models/gender.dart';
 import 'package:pawfect_care/models/medical_records.dart';
 
@@ -18,6 +19,7 @@ class Pet {
   bool? isNeutered;
   bool? isSpecialNeeds;
   List<MedicalRecords> medicalRecords;
+  List<Appointment> appointments;
   
   Pet({
     required this.petId,
@@ -32,6 +34,7 @@ class Pet {
     this.isNeutered,
     this.isSpecialNeeds,
     this.medicalRecords = const [],
+    this.appointments = const [],
   });
 
   Pet copyWith({
@@ -47,6 +50,7 @@ class Pet {
     bool? isNeutered,
     bool? isSpecialNeeds,
     List<MedicalRecords>? medicalRecords,
+    List<Appointment>? appointments,
   }) {
     return Pet(
       petId: petId ?? this.petId,
@@ -61,6 +65,7 @@ class Pet {
       isNeutered: isNeutered ?? this.isNeutered,
       isSpecialNeeds: isSpecialNeeds ?? this.isSpecialNeeds,
       medicalRecords: medicalRecords ?? this.medicalRecords,
+      appointments: appointments ?? this.appointments,
     );
   }
 
@@ -78,6 +83,7 @@ class Pet {
       'isNeutered': isNeutered,
       'isSpecialNeeds': isSpecialNeeds,
       'medicalRecords': medicalRecords.map((x) => x.toMap()).toList(),
+      'appointments': appointments.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -94,7 +100,8 @@ class Pet {
       isSpayed: map['isSpayed'] as bool?,
       isNeutered: map['isNeutered'] as bool?,
       isSpecialNeeds: map['isSpecialNeeds'] as bool?,
-      medicalRecords: (map['medicalRecords'] as List<MedicalRecords>)
+      medicalRecords: (map['medicalRecords'] as List<MedicalRecords>),
+      appointments: (map['appointments'] as List<Appointment>),
         
     );
   }
@@ -112,7 +119,7 @@ class Pet {
 
   @override
   String toString() {
-    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds)';
+    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds, medicalRecords: $medicalRecords, appointments: $appointments)';
   }
 
   @override
@@ -130,7 +137,8 @@ class Pet {
         other.isSpayed == isSpayed &&
         other.isNeutered == isNeutered &&
         other.isSpecialNeeds == isSpecialNeeds&&
-        listEquals(other.medicalRecords, medicalRecords);
+        listEquals(other.medicalRecords, medicalRecords)&&
+        listEquals(other.appointments, appointments);
   }
 
   @override
@@ -145,6 +153,8 @@ class Pet {
         isVaccinated.hashCode ^
         isSpayed.hashCode ^
         isNeutered.hashCode ^
-        isSpecialNeeds.hashCode;
+        isSpecialNeeds.hashCode^
+        medicalRecords.hashCode^
+        appointments.hashCode;
   }
 }

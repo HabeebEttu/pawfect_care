@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pawfect_care/models/articles.dart';
+import 'package:pawfect_care/models/article.dart';
 import 'package:pawfect_care/models/role.dart';
 import 'package:pawfect_care/models/user.dart';
 
@@ -31,7 +31,5 @@ class AdminService {
       rethrow;
     }
   }
-  Future<void> addArticleToBlog(Articles a,User u)async {
-      
-  }
+  
 }
