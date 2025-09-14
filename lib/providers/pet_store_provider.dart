@@ -1,7 +1,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:pawfect_care/models/pet_store.dart';
+import 'package:pawfect_care/models/pet_store_item.dart';
 import 'package:pawfect_care/services/pet_store_service.dart';
 
 final petStoreServiceProvider = Provider<PetStoreService>((ref) {
@@ -22,7 +22,7 @@ final categoriesProvider = FutureProvider<List<String>>((ref) async {
 });
 
 // filtered pet store provider
-final filteredPetStoreProvider = FutureProvider<List<PetStore>>((ref) async {
+final filteredPetStoreProvider = FutureProvider<List<PetStoreItem>>((ref) async {
   final service = ref.read(petStoreServiceProvider);
   final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
   final selectedCategory = ref.watch(selectedCategoryProvider);

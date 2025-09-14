@@ -1,8 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/theme/theme.dart';
+import 'package:provider/provider.dart'; 
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,220 +19,193 @@ class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: Text(
-                  'Login',
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                    color: Colors.teal[700],
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              _buildFormField(
-                context,
-                "Email",
-                "Enter your email address",
-                (value) {
-                  String email = _emailController.text;
-                  if (email.isEmpty) {
-                    return "Please enter your email";
-                  } else if (!EmailValidator.validate(email)) {
-                    return "Please enter a valid email";
-                  } else {
-                    return null;
-                  }
-                },
-                false,
-                _emailController,
-              ),
-              SizedBox(height: 20),
-              _buildFormField(
-                context,
-                "Password",
-                "Enter your account password",
-                (value) {
-                  String password = _passwordController.text;
-                  if (password.isEmpty) {
-                    return "Please enter your password";
-                  } else if (password.length < 6) {
-                    return "Password length is too short";
-                  } else {
-                    return null;
-                  }
-                },
-                true,
-                _passwordController,
-              ),
-              SizedBox(height: 5),
-              _buildForgotPassword(context),
-              SizedBox(height: 30),
-              Consumer<AuthProvider>(
-                builder: (context, authProvider, child) {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal.shade700,
-                      minimumSize: Size(double.infinity, 50),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+      backgroundColor: PawfectCareTheme.backgroundWhite,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Form(
+            key: _formKey,
+            // Wrap the main content with a Consumer to listen to AuthProvider changes
+            child: Consumer<AuthProvider>(
+              builder: (context, authProvider, child) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 80),
+                    Text(
+                      'Welcome to Pawfect Care',
+                      style: PawfectCareTheme.headingLarge.copyWith(
+                        color: PawfectCareTheme.primaryBlue,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Login to your account to continue',
+                      style: PawfectCareTheme.bodyMedium.copyWith(
+                        color: PawfectCareTheme.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 40),
+                    Text(
+                      'Email Address',
+                      style: PawfectCareTheme.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onPressed: authProvider.isLoading
-                        ? null
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              String email = _emailController.text;
-                              String password = _passwordController.text;
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      style: PawfectCareTheme.bodyMedium,
+                      decoration: InputDecoration(
+  hintText: 'Enter your account email address',
+  hintStyle: PawfectCareTheme.bodyMedium.copyWith(
+    color: PawfectCareTheme.textMuted,
+  ),
+  
+).copyWith(
+  enabledBorder: PawfectCareTheme.inputDecorationTheme.enabledBorder,
+  focusedBorder: PawfectCareTheme.inputDecorationTheme.focusedBorder,
+),
 
-                              authProvider
-                                  .signIn(email: email, password: password)
-                                  .then((_) {
-                                    if (authProvider.user != null) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage(),
-                                        ),
-                                      );
-                                    } else if (authProvider.errorMessage !=
-                                        null) {
-                                     
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              authProvider.errorMessage!,
-                                            ),
-                                          ),
-                                        );
-                                      
-                                    }
-                                  });
-                            }
-                          },
-                    child: authProvider.isLoading
-                        ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          )
-                        : Text(
-                            'Log In',
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                  );
-                },
-              ),
-              SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Dont have an account? '),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      'SignUp here',
-                      style: TextStyle(decoration: TextDecoration.underline),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        } else if (!EmailValidator.validate(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(height: 16),
+                    Text(
+                      'Password',
+                      style: PawfectCareTheme.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _isObscure,
+                      style: PawfectCareTheme.bodyMedium,
+                      decoration: InputDecoration(
+  hintText: 'Enter your account password',
+  hintStyle: PawfectCareTheme.bodyMedium.copyWith(
+    color: PawfectCareTheme.textMuted,
+  ),
+  suffixIcon: IconButton(
+    icon: Icon(
+      _isObscure ? Icons.visibility_off : Icons.visibility,
+      color: PawfectCareTheme.textMuted,
+    ),
+    onPressed: () {
+      setState(() {
+        _isObscure = !_isObscure;
+      });
+    },
+  ),
+).copyWith(
+  // apply theme overrides from your PawfectCareTheme
+  enabledBorder: PawfectCareTheme.inputDecorationTheme.enabledBorder,
+  focusedBorder: PawfectCareTheme.inputDecorationTheme.focusedBorder,
+),
+
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Forgot Password?',
+                          style: PawfectCareTheme.linkText,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: authProvider.isLoading
+                          ? null
+                          : () async {
+                              if (_formKey.currentState!.validate()) {
+                                await authProvider.signIn(
+                                  email: _emailController.text.trim(),
+                                  password: _passwordController.text.trim(),
+                                );
+                                if (mounted && authProvider.user != null) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomePage(),
+                                    ),
+                                  );
+                                } else if (mounted &&
+                                    authProvider.errorMessage != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(authProvider.errorMessage!),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                      child: authProvider.isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text('Log In'),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Don\'t have an account?',
+                          style: PawfectCareTheme.bodyMedium,
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Sign Up',
+                            style: PawfectCareTheme.linkText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Row _buildForgotPassword(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        GestureDetector(
-          onTap: () {},
-          child: Text(
-            'Forgot Password?',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium!.copyWith(color: Colors.black87),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column _buildFormField(
-    BuildContext context,
-    String label,
-    String placeholder,
-    FormFieldValidator<String>? validator,
-    bool isPassword,
-    TextEditingController controller,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("$label:"),
-        const SizedBox(height: 5),
-        TextFormField(
-          controller: controller,
-          obscureText: isPassword
-              ? _isObscure
-              : false, // 👈 only obscure if password field
-          decoration: InputDecoration(
-            hintText: placeholder,
-            hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: const Color.fromARGB(255, 124, 129, 124),
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey[300]!,
-                style: BorderStyle.solid,
-                width: 0.75,
-              ),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color.fromARGB(255, 54, 126, 56),
-                style: BorderStyle.solid,
-                width: 1.5,
-              ),
-            ),
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isObscure ? Icons.visibility_off : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
-                    },
-                  )
-                : null,
-          ),
-          style: const TextStyle(),
-          validator: validator,
-        ),
-      ],
     );
   }
 }

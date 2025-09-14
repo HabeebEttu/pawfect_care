@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pawfect_care/models/profile.dart';
 import 'package:pawfect_care/models/role.dart';
 import 'package:pawfect_care/models/user.dart' as user;
+
 class AuthService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -48,42 +49,48 @@ class AuthService {
     String password,
     String name, {
     Role? role,
-  }
-  ) async {
+  }) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-          if(role == null){
-            await firestore
+      if (role == null) {
+        await firestore
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set(
+              user.User(
+                
+                email: email,
+                name: name,
+                profile: Profile(uid: userCredential.user!.uid),
+                userId: userCredential.user!.uid,
+              ).toMap(),
+            );
+      } else {
+        await firestore
             .collection('users')
             .doc(userCredential.user!.uid)
             .set(
               user.User(
                 email: email,
                 name: name,
-                password: password,
                 profile: Profile(uid: userCredential.user!.uid),
                 userId: userCredential.user!.uid,
+                role: role,
               ).toMap(),
             );
-          }else{
-            await firestore
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set(
-              user.User(
-                email: email,
-                name: name,
-                password: password,
-                profile: Profile(uid: userCredential.user!.uid),
-                userId: userCredential.user!.uid,
-                role: role
-              ).toMap(),
-            );
-          }
-      
+      }
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } catch (e) {
       rethrow;
     }
   }

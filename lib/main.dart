@@ -8,10 +8,15 @@ import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
 import 'package:pawfect_care/pages/login_page.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
    await dotenv.load(fileName: ".env");
+   await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(riverpod.ProviderScope(child: const MyApp()));
 }

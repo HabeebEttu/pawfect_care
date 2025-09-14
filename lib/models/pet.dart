@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:pawfect_care/models/gender.dart';
+import 'package:pawfect_care/models/medical_records.dart';
 
 class Pet {
   String petId;
@@ -15,6 +17,8 @@ class Pet {
   bool? isSpayed;
   bool? isNeutered;
   bool? isSpecialNeeds;
+  List<MedicalRecords> medicalRecords;
+  
   Pet({
     required this.petId,
     required this.userId,
@@ -27,6 +31,7 @@ class Pet {
     this.isSpayed,
     this.isNeutered,
     this.isSpecialNeeds,
+    this.medicalRecords = const [],
   });
 
   Pet copyWith({
@@ -41,6 +46,7 @@ class Pet {
     bool? isSpayed,
     bool? isNeutered,
     bool? isSpecialNeeds,
+    List<MedicalRecords>? medicalRecords,
   }) {
     return Pet(
       petId: petId ?? this.petId,
@@ -54,6 +60,7 @@ class Pet {
       isSpayed: isSpayed ?? this.isSpayed,
       isNeutered: isNeutered ?? this.isNeutered,
       isSpecialNeeds: isSpecialNeeds ?? this.isSpecialNeeds,
+      medicalRecords: medicalRecords ?? this.medicalRecords,
     );
   }
 
@@ -70,6 +77,7 @@ class Pet {
       'isSpayed': isSpayed,
       'isNeutered': isNeutered,
       'isSpecialNeeds': isSpecialNeeds,
+      'medicalRecords': medicalRecords.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -86,6 +94,8 @@ class Pet {
       isSpayed: map['isSpayed'] as bool?,
       isNeutered: map['isNeutered'] as bool?,
       isSpecialNeeds: map['isSpecialNeeds'] as bool?,
+      medicalRecords: (map['medicalRecords'] as List<MedicalRecords>)
+        
     );
   }
   static Gender _genderFromString(String status) {
@@ -119,7 +129,8 @@ class Pet {
         other.isVaccinated == isVaccinated &&
         other.isSpayed == isSpayed &&
         other.isNeutered == isNeutered &&
-        other.isSpecialNeeds == isSpecialNeeds;
+        other.isSpecialNeeds == isSpecialNeeds&&
+        listEquals(other.medicalRecords, medicalRecords);
   }
 
   @override
