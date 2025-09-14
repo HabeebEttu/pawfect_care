@@ -1,3 +1,9 @@
+import 'package:pawfect_care/models/adoption_record.dart';
+import 'package:pawfect_care/models/adoption_status.dart';
+import 'package:pawfect_care/providers/auth_provider.dart';
+import 'package:pawfect_care/services/adoption_service.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/theme/theme.dart';
 
@@ -827,11 +833,11 @@ class _PetProfilePageState extends State<PetProfilePage>
   Widget _buildFloatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        _showQuickActionsBottomSheet();
+        // _showAdoptPetDialog();
       },
       backgroundColor: PawfectCareTheme.primaryBlue,
       foregroundColor: Colors.white,
-      child: const Icon(Icons.add),
+      child: const Icon(Icons.pets),
     );
   }
 
@@ -873,6 +879,74 @@ class _PetProfilePageState extends State<PetProfilePage>
               ),
             ),
             child: const Text('Edit'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAdoptPetDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Adopt Buddy',
+          style: PawfectCareTheme.headingSmall.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to adopt Buddy?',
+          style: PawfectCareTheme.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: PawfectCareTheme.bodyMedium.copyWith(
+                color: PawfectCareTheme.textSecondary,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final authProvider = context.read<AuthProvider>();
+              final user = authProvider.user;
+              if (user == null) {
+                // Handle user not logged in
+                return;
+              }
+
+              final adoptionService = AdoptionService();
+              final record = AdoptionRecord(
+                adoptionId: ' ',
+                petId: 'buddy', // Replace with actual pet ID
+                userId: user.uid,
+                adoptionDate: DateTime.now(),
+                status: AdoptionStatus.pending,
+              );
+
+              await adoptionService.createAdoptionRecord(record, 'shelterId');
+              // await adoptionService.updatePetStatus('buddy', true); // Replace with actual pet ID
+
+              Navigator.pop(context);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Adoption request sent!'),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: PawfectCareTheme.primaryBlue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Adopt'),
           ),
         ],
       ),
