@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/pages/forgot_password_page.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
@@ -354,7 +355,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         TextButton(
           onPressed: () {
-            // Handle forgot password
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return const ForgotPasswordPage();
+            },));
           },
           child: Text(
             'Forgot Password?',

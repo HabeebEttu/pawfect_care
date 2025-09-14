@@ -11,7 +11,9 @@ class Pet {
   String? userId;
   String name;
   String species;
+  String breed;
   int age;
+  String description;
   String photoUrl;
   Gender gender;
   bool isVaccinated;
@@ -27,7 +29,9 @@ class Pet {
     this.userId,
     required this.name,
     required this.species,
+    required this.breed,
     required this.age,
+    required this.description,
     required this.photoUrl,
     required this.gender,
     required this.isVaccinated,
@@ -44,7 +48,9 @@ class Pet {
     String? userId,
     String? name,
     String? species,
+    String? breed,
     int? age,
+    String? description,
     String? photoUrl,
     Gender? gender,
     bool? isVaccinated,
@@ -61,7 +67,9 @@ class Pet {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       species: species ?? this.species,
+      breed: breed ?? this.breed,
       age: age ?? this.age,
+      description: description ?? this.description,
       photoUrl: photoUrl ?? this.photoUrl,
       gender: gender ?? this.gender,
       isVaccinated: isVaccinated ?? this.isVaccinated,
@@ -79,7 +87,9 @@ class Pet {
       'userId': userId,
       'name': name,
       'species': species,
+      'breed': breed,
       'age': age,
+      'description': description,
       'photoUrl': photoUrl,
       'gender': gender.toString(),
       'isVaccinated': isVaccinated,
@@ -97,7 +107,9 @@ class Pet {
       userId: map['userId'] as String,
       name: map['name'] as String,
       species: map['species'] as String,
+      breed: map['breed'] as String,
       age: map['age'] as int,
+      description: map['description'] as String,
       photoUrl: map['photoUrl'] as String,
       gender: _genderFromString(map['gender'] as String),
       isVaccinated: map['isVaccinated'] as bool,
@@ -122,7 +134,7 @@ class Pet {
 
   @override
   String toString() {
-    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds, medicalRecords: $medicalRecords, appointments: $appointments)';
+    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, breed: $breed, age: $age, description: $description, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds, medicalRecords: $medicalRecords, appointments: $appointments)';
   }
 
   @override
@@ -133,7 +145,9 @@ class Pet {
         other.userId == userId &&
         other.name == name &&
         other.species == species &&
+        other.breed == breed &&
         other.age == age &&
+        other.description == description &&
         other.photoUrl == photoUrl &&
         other.gender == gender &&
         other.isVaccinated == isVaccinated &&
@@ -150,7 +164,9 @@ class Pet {
         userId.hashCode ^
         name.hashCode ^
         species.hashCode ^
+        breed.hashCode ^
         age.hashCode ^
+        description.hashCode ^
         photoUrl.hashCode ^
         gender.hashCode ^
         isVaccinated.hashCode ^

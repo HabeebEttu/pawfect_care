@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:pawfect_care/models/animal_shelter.dart';
+import 'package:pawfect_care/models/location.dart' as loc;
 import 'package:pawfect_care/services/location_service.dart';
+
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -21,32 +23,27 @@ class _MapPageState extends State<MapPage> {
     AnimalShelter(
       id: '1',
       name: 'Happy Paws Shelter',
-      address: '123 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zipCode: '12345',
-      country: 'USA',
       contactPhone: '555-1234',
       contactEmail: 'info@happypaws.com',
-      latitude: 37.4323,
-      longitude: -122.0948,
       animals: [],
       adoptionRecords: [],
+      location: loc.Location(
+        address: '123 Main St, Anytown, USA',
+        latitude: 37.4223,
+        longitude: -122.0848,
+      )
     ),
     AnimalShelter(
       id: '2',
       name: 'Furry Friends Rescue',
-      address: '456 Oak Ave',
-      city: 'Someville',
-      state: 'CA',
-      zipCode: '67890',
-      country: 'USA',
-      contactPhone: '555-5678',
+      contactPhone: '0907864321',
       contactEmail: 'contact@furryfriends.com',
-      latitude: 37.4123,
-      longitude: -122.0748,
       animals: [],
       adoptionRecords: [],
+      location:loc.Location(
+        address: '',
+        latitude: 37.4223, longitude: -122.0848,
+      )
     ),
   ];
 
@@ -79,10 +76,10 @@ class _MapPageState extends State<MapPage> {
       _markers.add(
         Marker(
           markerId: MarkerId(shelter.id),
-          position: LatLng(shelter.latitude, shelter.longitude),
+          position: LatLng(shelter.location.latitude, shelter.location.longitude),
           infoWindow: InfoWindow(
             title: shelter.name,
-            snippet: shelter.address,
+            snippet: shelter.location.address,
           ),
         ),
       );
