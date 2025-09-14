@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -97,7 +98,14 @@ class AppointmentPage extends StatelessWidget {
                       children: [
                         FloatingActionButton.extended(
                           backgroundColor: Colors.blue,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PetOwnerDashboard(),
+                              ),
+                            );
+                          },
                           label: Text(
                             "Book Appointments Now",
                             style: TextStyle(

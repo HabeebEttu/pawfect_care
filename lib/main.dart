@@ -2,19 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
-import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
+import 'package:pawfect_care/firebase_options.dart';
 import 'package:pawfect_care/pages/blog_page.dart';
+import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
+// import 'package:pawfect_care/pages/appointments/login_page.dart';
+import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:pawfect_care/firebase_options.dart';
-import 'package:pawfect_care/pages/login_page.dart';
-import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await dotenv.load(fileName: ".env");
-   await Supabase.initialize(
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
@@ -48,11 +48,10 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: themeProvider.getThemeData(context),
-            
+
             title: "Pawfect Care",
             home: BlogPage(),
-            routes: {"/login": (context) => const LoginPage(),
-            },
+            routes: {"/login": (context) => const PetOwnerDashboard()},
           );
         },
       ),

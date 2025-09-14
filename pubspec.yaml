@@ -57,6 +57,7 @@ dependencies:
   location: ^8.0.1
   geocoding: ^4.0.0
   image_picker: ^1.1.2
+  table_calendar: ^3.0.9
 
 
 
@@ -91,7 +92,7 @@ flutter:
     - images/pet_3.png
     - images/person.png
     - images/pawfectcare_logo.png
-    - .env
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
