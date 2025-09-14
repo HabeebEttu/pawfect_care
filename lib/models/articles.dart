@@ -4,10 +4,13 @@ class Articles {
   String title;
   String coverImageUrl;
   String articleContent;
+  String subtitle;
   Articles({
     required this.title,
     required this.coverImageUrl,
     required this.articleContent,
+    required this.subtitle
+
   });
 
   Articles copyWith({
@@ -19,6 +22,7 @@ class Articles {
       title: title ?? this.title,
       coverImageUrl: coverImageUrl ?? this.coverImageUrl,
       articleContent: articleContent ?? this.articleContent,
+      subtitle: subtitle ?? this.subtitle
     );
   }
 
@@ -27,6 +31,7 @@ class Articles {
       'title': title,
       'coverImageUrl': coverImageUrl,
       'articleContent': articleContent,
+      'subtitle': subtitle
     };
   }
 
@@ -35,6 +40,7 @@ class Articles {
       title: map['title'] as String,
       coverImageUrl: map['coverImageUrl'] as String,
       articleContent: map['articleContent'] as String,
+      subtitle: map['subtitle']
     );
   }
 

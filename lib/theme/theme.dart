@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PawfectCareTheme {
   static const Color primaryBlue = Color(0xFF5FA8D3);
@@ -27,68 +28,68 @@ class PawfectCareTheme {
   static const Color statusCancelled = Color(0xFFEF4444);
   static const Color statusUpcoming = Color(0xFF6366F1);
 
-  static const TextStyle headingLarge = TextStyle(
+  static TextStyle get headingLarge => GoogleFonts.inter(
     fontSize: 32,
     fontWeight: FontWeight.w700,
     color: textPrimary,
     letterSpacing: -0.5,
   );
 
-  static const TextStyle headingMedium = TextStyle(
+  static TextStyle get headingMedium => GoogleFonts.inter(
     fontSize: 24,
     fontWeight: FontWeight.w600,
     color: textPrimary,
     letterSpacing: -0.25,
   );
 
-  static const TextStyle headingSmall = TextStyle(
+  static TextStyle get headingSmall => GoogleFonts.inter(
     fontSize: 20,
     fontWeight: FontWeight.w600,
     color: textPrimary,
   );
 
-  static const TextStyle bodyLarge = TextStyle(
+  static TextStyle get bodyLarge => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: textPrimary,
     height: 1.5,
   );
 
-  static const TextStyle bodyMedium = TextStyle(
+  static TextStyle get bodyMedium => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: textPrimary,
     height: 1.5,
   );
 
-  static const TextStyle bodySmall = TextStyle(
+  static TextStyle get bodySmall => GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: textSecondary,
     height: 1.4,
   );
 
-  static const TextStyle caption = TextStyle(
+  static TextStyle get caption => GoogleFonts.inter(
     fontSize: 10,
     fontWeight: FontWeight.w400,
     color: textMuted,
     height: 1.4,
   );
 
-  static const TextStyle buttonText = TextStyle(
+  static TextStyle get buttonText => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: Colors.white,
   );
 
-  static const TextStyle linkText = TextStyle(
+  static TextStyle get linkText => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: primaryBlue,
     decoration: TextDecoration.underline,
   );
 
-  static const TextStyle priceText = TextStyle(
+  static TextStyle get priceText => GoogleFonts.inter(
     fontSize: 18,
     fontWeight: FontWeight.w700,
     color: primaryBlue,
@@ -175,8 +176,8 @@ class PawfectCareTheme {
   );
 
   static const AppBarTheme appBarTheme = AppBarTheme(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
+    backgroundColor: backgroundWhite,
+    elevation: 1,
     centerTitle: true,
     titleTextStyle: TextStyle(
       fontSize: 18,
@@ -300,8 +301,7 @@ class PawfectCareTheme {
       chipTheme: chipTheme,
       dividerTheme: dividerTheme,
       cardTheme: cardTheme,
-      fontFamily:
-          'SF Pro Display',
+      textTheme: GoogleFonts.interTextTheme(),
     );
   }
 }
