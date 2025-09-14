@@ -1,32 +1,46 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:pawfect_care/models/appointment.dart';
 import 'package:pawfect_care/models/gender.dart';
+import 'package:pawfect_care/models/medical_records.dart';
 
 class Pet {
   String petId;
-  String userId;
+  String? userId;
   String name;
   String species;
+  String breed;
   int age;
+  String description;
   String photoUrl;
   Gender gender;
   bool isVaccinated;
   bool? isSpayed;
   bool? isNeutered;
   bool? isSpecialNeeds;
+  String? shelterId;
+  List<MedicalRecords> medicalRecords;
+  List<Appointment> appointments;
+
   Pet({
     required this.petId,
-    required this.userId,
+    this.userId,
     required this.name,
     required this.species,
+    required this.breed,
     required this.age,
+    required this.description,
     required this.photoUrl,
     required this.gender,
     required this.isVaccinated,
     this.isSpayed,
     this.isNeutered,
     this.isSpecialNeeds,
+    this.medicalRecords = const [],
+    this.appointments = const [],
+    this.shelterId
   });
 
   Pet copyWith({
@@ -34,26 +48,36 @@ class Pet {
     String? userId,
     String? name,
     String? species,
+    String? breed,
     int? age,
+    String? description,
     String? photoUrl,
     Gender? gender,
     bool? isVaccinated,
     bool? isSpayed,
     bool? isNeutered,
     bool? isSpecialNeeds,
+    List<MedicalRecords>? medicalRecords,
+    List<Appointment>? appointments,
+    String? shelterId
+    
   }) {
     return Pet(
       petId: petId ?? this.petId,
       userId: userId ?? this.userId,
       name: name ?? this.name,
       species: species ?? this.species,
+      breed: breed ?? this.breed,
       age: age ?? this.age,
+      description: description ?? this.description,
       photoUrl: photoUrl ?? this.photoUrl,
       gender: gender ?? this.gender,
       isVaccinated: isVaccinated ?? this.isVaccinated,
       isSpayed: isSpayed ?? this.isSpayed,
       isNeutered: isNeutered ?? this.isNeutered,
       isSpecialNeeds: isSpecialNeeds ?? this.isSpecialNeeds,
+      medicalRecords: medicalRecords ?? this.medicalRecords,
+      appointments: appointments ?? this.appointments,
     );
   }
 
@@ -63,13 +87,17 @@ class Pet {
       'userId': userId,
       'name': name,
       'species': species,
+      'breed': breed,
       'age': age,
+      'description': description,
       'photoUrl': photoUrl,
       'gender': gender.toString(),
       'isVaccinated': isVaccinated,
       'isSpayed': isSpayed,
       'isNeutered': isNeutered,
       'isSpecialNeeds': isSpecialNeeds,
+      'medicalRecords': medicalRecords.map((x) => x.toMap()).toList(),
+      'appointments': appointments.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -79,13 +107,17 @@ class Pet {
       userId: map['userId'] as String,
       name: map['name'] as String,
       species: map['species'] as String,
+      breed: map['breed'] as String,
       age: map['age'] as int,
+      description: map['description'] as String,
       photoUrl: map['photoUrl'] as String,
       gender: _genderFromString(map['gender'] as String),
       isVaccinated: map['isVaccinated'] as bool,
       isSpayed: map['isSpayed'] as bool?,
       isNeutered: map['isNeutered'] as bool?,
       isSpecialNeeds: map['isSpecialNeeds'] as bool?,
+      medicalRecords: (map['medicalRecords'] as List<MedicalRecords>),
+      appointments: (map['appointments'] as List<Appointment>),
     );
   }
   static Gender _genderFromString(String status) {
@@ -102,7 +134,7 @@ class Pet {
 
   @override
   String toString() {
-    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, age: $age, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds)';
+    return 'Pet(petId: $petId, userId: $userId, name: $name, species: $species, breed: $breed, age: $age, description: $description, photoUrl: $photoUrl, gender: $gender, isVaccinated: $isVaccinated, isSpayed: $isSpayed, isNeutered: $isNeutered, isSpecialNeeds: $isSpecialNeeds, medicalRecords: $medicalRecords, appointments: $appointments)';
   }
 
   @override
@@ -113,13 +145,17 @@ class Pet {
         other.userId == userId &&
         other.name == name &&
         other.species == species &&
+        other.breed == breed &&
         other.age == age &&
+        other.description == description &&
         other.photoUrl == photoUrl &&
         other.gender == gender &&
         other.isVaccinated == isVaccinated &&
         other.isSpayed == isSpayed &&
         other.isNeutered == isNeutered &&
-        other.isSpecialNeeds == isSpecialNeeds;
+        other.isSpecialNeeds == isSpecialNeeds &&
+        listEquals(other.medicalRecords, medicalRecords) &&
+        listEquals(other.appointments, appointments);
   }
 
   @override
@@ -128,12 +164,16 @@ class Pet {
         userId.hashCode ^
         name.hashCode ^
         species.hashCode ^
+        breed.hashCode ^
         age.hashCode ^
+        description.hashCode ^
         photoUrl.hashCode ^
         gender.hashCode ^
         isVaccinated.hashCode ^
         isSpayed.hashCode ^
         isNeutered.hashCode ^
-        isSpecialNeeds.hashCode;
+        isSpecialNeeds.hashCode ^
+        medicalRecords.hashCode ^
+        appointments.hashCode;
   }
 }

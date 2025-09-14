@@ -1,1 +1,1 @@
-enum Status { CANCELLED, APPROVED ,PENDING}
+enum Status { cancelled, approved, pending, completed }

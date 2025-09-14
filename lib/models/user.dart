@@ -1,16 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-
-import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/models/profile.dart';
 import 'package:pawfect_care/models/role.dart';
 
 class User {
   final String email;
   final String name;
-  final String password;
   final String? phone;
   final Profile profile;
   final String userId;
@@ -19,7 +14,6 @@ class User {
   User({
     required this.email,
     required this.name,
-    required this.password,
     this.phone,
     required this.profile,
     required this.userId,
@@ -29,7 +23,6 @@ class User {
   User copyWith({
     String? email,
     String? name,
-    String? password,
     String? phone,
     Profile? profile,
     String? userId,
@@ -38,7 +31,6 @@ class User {
     return User(
       email: email ?? this.email,
       name: name ?? this.name,
-      password: password ?? this.password,
       phone: phone ?? this.phone,
       profile: profile ?? this.profile,
       userId: userId ?? this.userId,
@@ -50,7 +42,6 @@ class User {
     return <String, dynamic>{
       'email': email,
       'name': name,
-      'password': password,
       'phone': phone,
       'profile': profile.toMap(),
       'userId': userId,
@@ -62,7 +53,6 @@ class User {
     return User(
       email: map['email'] as String,
       name: map['name'] as String,
-      password: map['password'] as String,
       phone: map['phone'] != null ? map['phone'] as String : null,
       profile: Profile.fromMap(map['profile'] as Map<String, dynamic>),
       userId: map['userId'] as String,
@@ -77,7 +67,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(email: $email, name: $name, password: $password, phone: $phone, profile: $profile, userId: $userId, role: $role)';
+    return 'User(email: $email, name: $name, phone: $phone, profile: $profile, userId: $userId, role: $role)';
   }
 
   @override
@@ -86,7 +76,6 @@ class User {
 
     return other.email == email &&
         other.name == name &&
-        other.password == password &&
         other.phone == phone &&
         other.profile == profile &&
         other.userId == userId &&
@@ -97,7 +86,6 @@ class User {
   int get hashCode {
     return email.hashCode ^
         name.hashCode ^
-        password.hashCode ^
         phone.hashCode ^
         profile.hashCode ^
         userId.hashCode ^
