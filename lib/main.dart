@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:pawfect_care/pages/pet_store/pet_store_page.dart';
+import 'package:pawfect_care/pages/register_page.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
             
             title: "Pawfect Care",
-            home: PetStorePage(),
+            home: RegisterPage(),
             routes: {"/login": (context) => const LoginPage()},
           );
         },

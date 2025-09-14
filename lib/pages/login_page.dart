@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -146,7 +147,10 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text('Dont have an account? '),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, AppRoutes
+                          .register);
+                    },
                     child: Text(
                       'SignUp here',
                       style: TextStyle(decoration: TextDecoration.underline),

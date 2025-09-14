@@ -17,6 +17,7 @@ class Articles {
     String? title,
     String? coverImageUrl,
     String? articleContent,
+    String? subtitle,
   }) {
     return Articles(
       title: title ?? this.title,
