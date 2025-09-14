@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pawfect_care/pages/forgot_password_page.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 
@@ -118,7 +119,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+                color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -537,7 +538,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
           TextButton(
             onPressed: () {
-              // Navigate to sign up
+              Navigator.pushReplacementNamed(context, AppRoutes.register);
             },
             child: Text(
               'Sign Up',

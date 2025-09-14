@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawfect_care/models/article.dart';
 import 'package:pawfect_care/models/role.dart';
 import 'package:pawfect_care/models/user.dart';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class AdminService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   AdminService();
 
   Future<void> setAdmin(User u) async {
@@ -31,5 +31,5 @@ class AdminService {
       rethrow;
     }
   }
-  
+
 }

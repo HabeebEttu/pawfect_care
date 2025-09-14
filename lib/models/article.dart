@@ -1,70 +1,95 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-
-import 'package:pawfect_care/models/review.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Article {
-  String userId;
-  String id;
-  String title;
-  String coverImageUrl;
-  String articleContent;
-  String subtitle;
-  List<Review> reviews;
+  final String id;
+  final String title;
+  final String coverImageUrl;
+  final String articleContent;
+  final String subtitle;
+  final String authorId;
+  final String authorRole;
+  final DateTime createdAt;
 
   Article({
-    required this.userId,
     required this.id,
     required this.title,
     required this.coverImageUrl,
     required this.articleContent,
     required this.subtitle,
-    required this.reviews,
+    required this.authorId,
+    required this.authorRole,
+    required this.createdAt,
   });
 
   Article copyWith({
-    String? userId,
     String? id,
     String? title,
     String? coverImageUrl,
     String? articleContent,
     String? subtitle,
-    List<Review>? reviews,
+    String? authorId,
+    String? authorRole,
+    DateTime? createdAt,
   }) {
     return Article(
-      userId: userId ?? this.userId,
       id: id ?? this.id,
       title: title ?? this.title,
       coverImageUrl: coverImageUrl ?? this.coverImageUrl,
       articleContent: articleContent ?? this.articleContent,
       subtitle: subtitle ?? this.subtitle,
-      reviews: reviews ?? this.reviews,
+      authorId: authorId ?? this.authorId,
+      authorRole: authorRole ?? this.authorRole,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
+  /// Convert this Article to a map for Firestore
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'userId': userId,
-      'id': id,
+    return {
+      // we usually don’t store the id because doc.id is used,
+      // but keep it if you prefer.
       'title': title,
       'coverImageUrl': coverImageUrl,
       'articleContent': articleContent,
       'subtitle': subtitle,
-      'reviews': reviews.map((x) => x.toMap()).toList(),
+      'authorId': authorId,
+      'authorRole': authorRole,
+      // store as Timestamp for Firestore
+      'createdAt': Timestamp.fromDate(createdAt),
     };
   }
 
+  /// Build an Article from a Firestore document snapshot
+  factory Article.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data()!;
+    return Article(
+      id: doc.id,
+      title: data['title'] ?? '',
+      coverImageUrl: data['coverImageUrl'] ?? '',
+      articleContent: data['articleContent'] ?? '',
+      subtitle: data['subtitle'] ?? '',
+      authorId: data['authorId'] ?? '',
+      authorRole: data['authorRole'] ?? '',
+      createdAt: (data['createdAt'] is Timestamp)
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.tryParse(data['createdAt']?.toString() ?? '') ??
+          DateTime.now(),
+    );
+  }
+
+  /// If you ever need to decode from raw JSON (not Firestore)
   factory Article.fromMap(Map<String, dynamic> map) {
     return Article(
-      userId: map['userId'] as String,
-      id: map['id'] as String,
-      title: map['title'] as String,
-      coverImageUrl: map['coverImageUrl'] as String,
-      articleContent: map['articleContent'] as String,
-      subtitle: map['subtitle'] as String,
-      reviews: List<Review>.from((map['reviews'] as List<int>).map<Review>((x) => Review.fromMap(x as Map<String,dynamic>),),),
+      id: map['id'] ?? '',
+      title: map['title'] ?? '',
+      coverImageUrl: map['coverImageUrl'] ?? '',
+      articleContent: map['articleContent'] ?? '',
+      subtitle: map['subtitle'] ?? '',
+      authorId: map['authorId'] ?? '',
+      authorRole: map['authorRole'] ?? '',
+      createdAt: DateTime.tryParse(map['createdAt']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 
@@ -74,32 +99,31 @@ class Article {
       Article.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() {
-    return 'Article(userId: $userId, id: $id, title: $title, coverImageUrl: $coverImageUrl, articleContent: $articleContent, subtitle: $subtitle, reviews: $reviews)';
-  }
+  String toString() =>
+      'Article(id: $id, title: $title, authorRole: $authorRole, createdAt: $createdAt)';
 
   @override
-  bool operator ==(covariant Article other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.userId == userId &&
-      other.id == id &&
-      other.title == title &&
-      other.coverImageUrl == coverImageUrl &&
-      other.articleContent == articleContent &&
-      other.subtitle == subtitle &&
-      listEquals(other.reviews, reviews);
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Article &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              title == other.title &&
+              coverImageUrl == other.coverImageUrl &&
+              articleContent == other.articleContent &&
+              subtitle == other.subtitle &&
+              authorId == other.authorId &&
+              authorRole == other.authorRole &&
+              createdAt == other.createdAt;
 
   @override
-  int get hashCode {
-    return userId.hashCode ^
+  int get hashCode =>
       id.hashCode ^
       title.hashCode ^
       coverImageUrl.hashCode ^
       articleContent.hashCode ^
       subtitle.hashCode ^
-      reviews.hashCode;
-  }
+      authorId.hashCode ^
+      authorRole.hashCode ^
+      createdAt.hashCode;
 }

@@ -5,19 +5,19 @@ class BlogService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addArticleToBlog(Article article) async {
-    await _firestore.collection('blog').doc(article.id).set(article.toMap());
+    await _firestore.collection('blogs').doc(article.id).set(article.toMap());
   }
 
   Future<List<Article>> getAllArticles() async {
     final QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-        .collection('blog')
+        .collection('blogs')
         .get();
 
     return snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList();
   }
 
   Future<Article?> getArticleById(String id) async {
-    final doc = await _firestore.collection('blog').doc(id).get();
+    final doc = await _firestore.collection('blogs').doc(id).get();
     if (doc.exists) {
       return Article.fromMap(doc.data() as Map<String, dynamic>);
     }
@@ -25,16 +25,17 @@ class BlogService {
   }
 
   Future<void> updateArticle(Article article) async {
-    await _firestore.collection('blog').doc(article.id).update(article.toMap());
+    await _firestore.collection('blogs').doc(article.id).update(article.toMap
+      ());
   }
 
   Future<void> deleteArticle(String id) async {
-    await _firestore.collection('blog').doc(id).delete();
+    await _firestore.collection('blogs').doc(id).delete();
   }
 
   Stream<List<Article>> streamAllArticles() {
     return _firestore
-        .collection('blog')
+        .collection('blogs')
         .snapshots()
         .map(
           (snapshot) =>
@@ -44,7 +45,7 @@ class BlogService {
 
   Future<List<Article>> searchArticles(String keyword) async {
     final snapshot = await _firestore
-        .collection('blog')
+        .collection('blogs')
         .where('title', isGreaterThanOrEqualTo: keyword)
         .where('title', isLessThanOrEqualTo: keyword + '\uf8ff')
         .get();
