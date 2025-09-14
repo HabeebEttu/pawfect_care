@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/pages/vet_dashboard.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
+import 'package:pawfect_care/providers/vet_service_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider()..initialize(),
         ),
+        ChangeNotifierProvider(create: (_) => VetProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
           if (!themeProvider.isInitialized) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: const Scaffold(
+              home: Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               ),
             );
@@ -42,8 +45,8 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
             
             title: "Pawfect Care",
-            home: const HomePage(),
-            routes: {"/login": (context) => const LoginPage()},
+            home: VeterinarianDashboard(),
+            routes: {"/login": (context) => LoginPage()},
           );
         },
       ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class MyPatientsDetailsPage extends StatelessWidget {
+class AssignedPetDetailsPage extends StatelessWidget {
 
-  final Map<String, dynamic> patient;
-  const MyPatientsDetailsPage({super.key, required this.patient});
+  final Map<String, dynamic> assignedPet;
+  const AssignedPetDetailsPage({super.key, required this.assignedPet});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${patient['name']} Details"),),
+      appBar: AppBar(title: Text("${assignedPet['name']} Details"),),
       body: Padding(
         padding: EdgeInsets.all(16), 
         child: Column(
@@ -16,13 +16,13 @@ class MyPatientsDetailsPage extends StatelessWidget {
           children: [
             Center(
               child: CircleAvatar(
-                backgroundImage: AssetImage(patient['photoUrl']),
+                backgroundImage: AssetImage(assignedPet['photoUrl']),
                 radius: 50,
               ),
             ),
             SizedBox(height: 20),
             Text(
-              patient['name'],
+              assignedPet['name'],
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -30,17 +30,17 @@ class MyPatientsDetailsPage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              'Species: ${patient['species']}',
+              'Species: ${assignedPet['species']}',
               style: TextStyle(fontSize: 18, color: Colors.blueGrey),
             ),
             SizedBox(height: 10),
             Text(
-              'Owner: ${patient['owner']}',
+              'Owner: ${assignedPet['owner']}',
               style: TextStyle(fontSize: 18, color: Colors.blueGrey),
             ),
             SizedBox(height: 20),
             Text(
-              'Pet ID: ${patient['petId']}',
+              'Pet ID: ${assignedPet['petId']}',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
 
