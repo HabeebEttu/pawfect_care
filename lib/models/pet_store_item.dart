@@ -1,4 +1,4 @@
-class PetStore {
+class PetStoreItem {
   final String id;
   final String name;
   final String imageUrl;
@@ -6,7 +6,7 @@ class PetStore {
   final String category;
   final int price;
 
-const PetStore({
+const PetStoreItem({
   required this.id,
   required this.name,
   required this.imageUrl,
@@ -15,8 +15,8 @@ const PetStore({
   required this.price
 });
 
-  factory PetStore.fromMap(Map<String, dynamic> data, String documentId) {
-    return PetStore(
+  factory PetStoreItem.fromMap(Map<String, dynamic> data, String documentId) {
+    return PetStoreItem(
       id: documentId,
       name: data['name'],
       imageUrl: data['imageUrl'] ?? '',

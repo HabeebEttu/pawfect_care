@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:pawfect_care/models/articles.dart';
+import 'package:pawfect_care/models/article.dart';
 import 'package:pawfect_care/models/pet.dart';
 
 class Profile {
@@ -17,7 +17,7 @@ class Profile {
   final String uid;
   final List<Pet>? pet;
   final List<Pet>? favorites;
-  final List<Articles>? savedArticles;
+  final List<Article>? savedArticles;
   
   Profile({
     this.photoUrl,
@@ -44,7 +44,7 @@ class Profile {
     String? uid,
     List<Pet>? pet,
     List<Pet>? favorites,
-    List<Articles>? savedArticles,
+    List<Article>? savedArticles,
   }) {
     return Profile(
       photoUrl: photoUrl ?? this.photoUrl,
@@ -89,7 +89,7 @@ class Profile {
       uid: map['uid'] as String,
       pet: map['pet'] != null ? List<Pet>.from((map['pet'] as List<int>).map<Pet?>((x) => Pet.fromMap(x as Map<String,dynamic>),),) : null,
       favorites: map['favorites'] != null ? List<Pet>.from((map['favorites'] as List<int>).map<Pet?>((x) => Pet.fromMap(x as Map<String,dynamic>),),) : null,
-      savedArticles: map['savedArticles'] != null ? List<Articles>.from((map['savedArticles'] as List<int>).map<Articles?>((x) => Articles.fromMap(x as Map<String,dynamic>),),) : null,
+      savedArticles: map['savedArticles'] != null ? List<Article>.from((map['savedArticles'] as List<int>).map<Article?>((x) => Article.fromMap(x as Map<String,dynamic>),),) : null,
     );
   }
 

@@ -1,3 +1,3 @@
 enum Role {
-admin , user, shelter,vet
+admin , user, shelter, vet
 }
