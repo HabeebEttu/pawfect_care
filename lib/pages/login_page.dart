@@ -385,7 +385,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            const HomePage(),
+                            const PetOwnerDashboard(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                               return FadeTransition(

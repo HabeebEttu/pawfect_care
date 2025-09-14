@@ -54,6 +54,7 @@ dependencies:
   flutter_local_notifications: ^17.2.1
   flutter_quill: 11.4.2
   flutter_markdown: ^0.7.2
+  location: ^8.0.1
 
 
 

@@ -50,7 +50,8 @@ class MyApp extends StatelessWidget {
             
             title: "Pawfect Care",
             home: const AnimalShelterDashboard(),
-            routes: {"/login": (context) => const LoginPage()},
+            routes: {"/login": (context) => const LoginPage(),
+            },
           );
         },
       ),

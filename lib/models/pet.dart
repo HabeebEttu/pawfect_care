@@ -8,7 +8,7 @@ import 'package:pawfect_care/models/medical_records.dart';
 
 class Pet {
   String petId;
-  String userId;
+  String? userId;
   String name;
   String species;
   int age;
@@ -18,12 +18,13 @@ class Pet {
   bool? isSpayed;
   bool? isNeutered;
   bool? isSpecialNeeds;
+  String? shelterId;
   List<MedicalRecords> medicalRecords;
   List<Appointment> appointments;
-  
+
   Pet({
     required this.petId,
-    required this.userId,
+    this.userId,
     required this.name,
     required this.species,
     required this.age,
@@ -35,6 +36,7 @@ class Pet {
     this.isSpecialNeeds,
     this.medicalRecords = const [],
     this.appointments = const [],
+    this.shelterId
   });
 
   Pet copyWith({
@@ -51,6 +53,8 @@ class Pet {
     bool? isSpecialNeeds,
     List<MedicalRecords>? medicalRecords,
     List<Appointment>? appointments,
+    String? shelterId
+    
   }) {
     return Pet(
       petId: petId ?? this.petId,
@@ -102,7 +106,6 @@ class Pet {
       isSpecialNeeds: map['isSpecialNeeds'] as bool?,
       medicalRecords: (map['medicalRecords'] as List<MedicalRecords>),
       appointments: (map['appointments'] as List<Appointment>),
-        
     );
   }
   static Gender _genderFromString(String status) {
@@ -136,8 +139,8 @@ class Pet {
         other.isVaccinated == isVaccinated &&
         other.isSpayed == isSpayed &&
         other.isNeutered == isNeutered &&
-        other.isSpecialNeeds == isSpecialNeeds&&
-        listEquals(other.medicalRecords, medicalRecords)&&
+        other.isSpecialNeeds == isSpecialNeeds &&
+        listEquals(other.medicalRecords, medicalRecords) &&
         listEquals(other.appointments, appointments);
   }
 
@@ -153,8 +156,8 @@ class Pet {
         isVaccinated.hashCode ^
         isSpayed.hashCode ^
         isNeutered.hashCode ^
-        isSpecialNeeds.hashCode^
-        medicalRecords.hashCode^
+        isSpecialNeeds.hashCode ^
+        medicalRecords.hashCode ^
         appointments.hashCode;
   }
 }

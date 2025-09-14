@@ -1,3 +1,4 @@
+import 'package:pawfect_care/pages/adoption_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/models/gender.dart';
 import 'package:pawfect_care/models/pet.dart';
@@ -5,14 +6,15 @@ import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+class PetOwnerDashboard extends StatefulWidget {
+  const PetOwnerDashboard({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PetOwnerDashboard> createState() => _PetOwnerDashboardState();
 }
 
-class _HomePageState extends State<HomePage>
+class _PetOwnerDashboardState extends State<PetOwnerDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final PageController _pageController = PageController();
@@ -49,6 +51,20 @@ class _HomePageState extends State<HomePage>
       isVaccinated: true,
     ),
   ];
+
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Home Page'),
+    AdoptionHistoryPage(),
+    Text('Profile Page'),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
