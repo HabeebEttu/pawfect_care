@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
@@ -64,43 +65,56 @@ class AnimalShelterDashboard extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 3,
 
-
                         itemBuilder: (context, index) {
                           return Card(
                             child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 8),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 15,
+                                horizontal: 8,
+                              ),
                               leading: CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/person.png'),
-                                radius:30,
+                                backgroundImage: AssetImage(
+                                  'assets/images/person.png',
+                                ),
+                                radius: 30,
                               ),
                               title: Text('Alice Johnson'),
                               subtitle: Text('For: buddy'),
-                              trailing:Row(
+                              trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: Colors.amber.withValues(alpha:0.3 ),
-                                      borderRadius: BorderRadius.circular(20)
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 3,
                                     ),
-                                    child: Text('Pending',style: PawfectCareTheme.bodySmall.copyWith(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.w600
-                                    ),),
+                                    decoration: BoxDecoration(
+                                      color: Colors.amber.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      'Pending',
+                                      style: PawfectCareTheme.bodySmall
+                                          .copyWith(
+                                            color: Colors.amber,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
                                   ),
-                                  Icon(Icons.navigate_next,size:20 ,)
+                                  Icon(Icons.navigate_next, size: 20),
                                 ],
-                              )
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
-                  SuccessStories(),
-                  SizedBox(height: 20,),
-                  SupportOurCauseForm()
+                    SuccessStories(),
+                    SizedBox(height: 20),
+                    SupportOurCauseForm(),
                   ],
                 ),
               ),
@@ -194,7 +208,7 @@ class AnimalShelterDashboard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10),
-          
+
                   Container(
                     decoration: BoxDecoration(
                       color: PawfectCareTheme.primaryBlue.withOpacity(0.4),
@@ -211,8 +225,8 @@ class AnimalShelterDashboard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
-                  SizedBox(height:5),
+
+                  SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       color: PawfectCareTheme.primaryBlue.withOpacity(0.4),
@@ -229,8 +243,7 @@ class AnimalShelterDashboard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height:5)
-                  ,
+                  SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       color: PawfectCareTheme.primaryBlue.withOpacity(0.4),
@@ -250,15 +263,19 @@ class AnimalShelterDashboard extends StatelessWidget {
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {},
-                    style: PawfectCareTheme.elevatedButtonTheme.style!.copyWith(),
+                    style: PawfectCareTheme.elevatedButtonTheme.style!
+                        .copyWith(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 5.0,
                         vertical: 0,
                       ),
-                      child: Text('View Profile',style: PawfectCareTheme.bodyMedium.copyWith(
-                        color: Colors.white
-                      ),),
+                      child: Text(
+                        'View Profile',
+                        style: PawfectCareTheme.bodyMedium.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -270,12 +287,6 @@ class AnimalShelterDashboard extends StatelessWidget {
     );
   }
 }
-
-
-
-  
-  
-
 
 class SuccessStories extends StatelessWidget {
   const SuccessStories({super.key});
@@ -291,14 +302,10 @@ class SuccessStories extends StatelessWidget {
             children: [
               const Text(
                 "Success Stories",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
-                onTap: () {
-                },
+                onTap: () {},
                 child: const Text(
                   "View More",
                   style: TextStyle(
@@ -307,7 +314,7 @@ class SuccessStories extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -321,19 +328,18 @@ class SuccessStories extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (context, index) => _buildSuccessStoryCard(),
           ),
-        )
+        ),
       ],
     );
   }
+
   SizedBox _buildSuccessStoryCard() {
     return SizedBox(
-      height: 200, 
+      height: 200,
       width: 280,
       child: Card(
         clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Stack(
           children: [
             Positioned.fill(
@@ -348,10 +354,7 @@ class SuccessStories extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withOpacity(0.6),
-                      Colors.transparent,
-                    ],
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                   ),
@@ -386,8 +389,7 @@ class SuccessStories extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   GestureDetector(
-                    onTap: () {
-                    },
+                    onTap: () {},
                     child: const Text(
                       "Read More",
                       style: TextStyle(
@@ -397,7 +399,7 @@ class SuccessStories extends StatelessWidget {
                         decoration: TextDecoration.underline,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -416,6 +418,9 @@ class SupportOurCauseForm extends StatefulWidget {
 }
 
 class _SupportOurCauseFormState extends State<SupportOurCauseForm> {
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -425,184 +430,257 @@ class _SupportOurCauseFormState extends State<SupportOurCauseForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text(
-                "Support Our Cause",
-                style: PawfectCareTheme.bodyMedium,
-              ),
-              const SizedBox(height: 4),
-
-              Text(
-                "Join our mission to provide loving homes for animals in need.",
-                style: PawfectCareTheme.bodySmall,
-              ),
-              const SizedBox(height: 16),
-
-              Text(
-                "Make a Donation",
-                style:PawfectCareTheme.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Amount (e.g., \$50)",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Your Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Your Email",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade600,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+              Form(
+                child: Column(
+                  children: [
+                    Text(
+                      "Support Our Cause",
+                      style: PawfectCareTheme.bodyMedium,
                     ),
-                  ),
-                  onPressed: () {},
-                  icon: const Icon(Icons.send, size: 18),
-                  label: const Text(
-                    "Donate Now",
-                    style: TextStyle(fontSize: 14),
-                  ),
+                    const SizedBox(height: 4),
+
+                    Text(
+                      "Join our mission to provide loving homes for animals in need.",
+                      style: PawfectCareTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 16),
+
+                    Text(
+                      "Make a Donation",
+                      style: PawfectCareTheme.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    TextField(
+                      keyboardType: TextInputType.numberWithOptions(),
+                      controller: _amountController,
+                      decoration: InputDecoration(
+                        hintText: "Amount (e.g., \$50)",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        hintText: "Your Name",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: "Your Email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade600,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.send, size: 18),
+                        label: const Text(
+                          "Donate Now",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 24),
+              VolunteeringForm(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-              const Text(
-                "Become a Volunteer",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+class VolunteeringForm extends StatefulWidget {
+  const VolunteeringForm({super.key});
+
+  @override
+  State<VolunteeringForm> createState() => _VolunteeringFormState();
+}
+
+class _VolunteeringFormState extends State<VolunteeringForm> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _intrestController = TextEditingController();
+  bool isChecked = false;
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Become a Volunteer",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: "Full Name",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
               ),
-              const SizedBox(height: 8),
 
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Full Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
               ),
-              const SizedBox(height: 10),
+            ),
+            controller: _nameController,
+          ),
+          const SizedBox(height: 10),
 
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Email Address",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              hintText: "Email Address",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
               ),
-              const SizedBox(height: 10),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Phone Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
               ),
-              const SizedBox(height: 10),
+            ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Email should not be empty';
+              } else if (!EmailValidator.validate(value)) {
+                return 'Enter a valid email address';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 10),
 
-              TextField(
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: "Tell us about your interest and availability",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
+          TextFormField(
+            controller: _numberController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Enter a  phone number';
+              } else if (value.length < 10) {
+                return 'Enter a valid phone number';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              hintText: "Phone Number",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
               ),
-              const SizedBox(height: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
 
-              Row(
-                children: [
-                  Checkbox(
-                    value: false,
-                    onChanged: (value) {},
-                  ),
-                  Flexible(
-                    child: Wrap(
-                      children: const [
-                        Text("I agree to the "),
-                        Text(
-                          "terms and conditions",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ],
+          TextFormField(
+            controller: _intrestController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: "Tell us about your interest and availability",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          Row(
+            children: [
+              Checkbox(
+                value: isChecked,
+                onChanged: (value) {
+                  setState(() {
+                    isChecked = !isChecked;
+                    value = isChecked;
+                  });
+                },
+              ),
+              Flexible(
+                child: Wrap(
+                  children: const [
+                    Text("I agree to the "),
+                    Text(
+                      "terms and conditions",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  )
-                ],
-              ),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_border, size: 18),
-                  label: const Text(
-                    "Submit Application",
-                    style: TextStyle(fontSize: 14),
-                  ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
+
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              onPressed: () {},
+              icon: const Icon(Icons.favorite_border, size: 18),
+              label: const Text(
+                "Submit Application",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

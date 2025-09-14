@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pawfect_care/models/pet_store.dart';
+import 'package:pawfect_care/models/pet_store_item.dart';
 
 class PetStoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<PetStore>> fetchProducts() async {
+  Future<List<PetStoreItem>> fetchProducts() async {
     final snapshot = await _db.collection('products').get();
     return snapshot.docs
-        .map((doc) => PetStore.fromMap(doc.data(), doc.id))
+        .map((doc) => PetStoreItem.fromMap(doc.data(), doc.id))
         .toList();
   }
 

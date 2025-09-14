@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pawfect_care/models/pet_store.dart';
+import 'package:pawfect_care/models/pet_store_item.dart';
 
 class StoreCard extends StatelessWidget {
-  final PetStore item;
+  final PetStoreItem item;
   final int index;
 
   const StoreCard({super.key, required this.item, required this.index});

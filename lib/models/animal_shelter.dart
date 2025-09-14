@@ -1,9 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:pawfect_care/models/pet.dart';
+
 class AnimalShelter {
   final String id;
   final String name;
+  final List<Pet> animals;
+  final List<AdoptionRecord> adoptionRecords;
+  
   final String address;
   final String city;
   final String state;
@@ -22,7 +27,6 @@ class AnimalShelter {
     required this.contactPhone,
     required this.contactEmail,
   });
-  
 
   AnimalShelter copyWith({
     String? id,
@@ -78,7 +82,8 @@ class AnimalShelter {
 
   String toJson() => json.encode(toMap());
 
-  factory AnimalShelter.fromJson(String source) => AnimalShelter.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AnimalShelter.fromJson(String source) =>
+      AnimalShelter.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -88,29 +93,28 @@ class AnimalShelter {
   @override
   bool operator ==(covariant AnimalShelter other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.address == address &&
-      other.city == city &&
-      other.state == state &&
-      other.zipCode == zipCode &&
-      other.country == country &&
-      other.contactPhone == contactPhone &&
-      other.contactEmail == contactEmail;
+
+    return other.id == id &&
+        other.name == name &&
+        other.address == address &&
+        other.city == city &&
+        other.state == state &&
+        other.zipCode == zipCode &&
+        other.country == country &&
+        other.contactPhone == contactPhone &&
+        other.contactEmail == contactEmail;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      address.hashCode ^
-      city.hashCode ^
-      state.hashCode ^
-      zipCode.hashCode ^
-      country.hashCode ^
-      contactPhone.hashCode ^
-      contactEmail.hashCode;
+        name.hashCode ^
+        address.hashCode ^
+        city.hashCode ^
+        state.hashCode ^
+        zipCode.hashCode ^
+        country.hashCode ^
+        contactPhone.hashCode ^
+        contactEmail.hashCode;
   }
 }
