@@ -1,14 +1,15 @@
-
 import 'dart:convert';
 
 import 'package:pawfect_care/models/status.dart';
+
+import 'status.dart';
 
 class Appointment {
   String appointmentId;
   String petId;
   String vetId;
   DateTime? appointmentTime;
-  Status appointmentStatus;
+  Status? appointmentStatus;
   String? notes;
   String service;
   Appointment({
@@ -47,7 +48,7 @@ class Appointment {
       'petId': petId,
       'vetId': vetId,
       'appointmentTime': appointmentTime?.millisecondsSinceEpoch,
-      'appointmentStatus': appointmentStatus.name,
+      'appointmentStatus': appointmentStatus?.name,
       'notes': notes,
       'service': service,
     };
