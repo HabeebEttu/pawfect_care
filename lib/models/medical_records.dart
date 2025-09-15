@@ -1,75 +1,56 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:io';
 
-class MedicalRecords {
-  String petId;
-  String title;
-  String desc;
-  DateTime dateTime;
-  MedicalRecords({
+class MedicalRecord {
+  final String id;
+  final String petId; 
+  final String title;
+  final String description;
+  final DateTime date;
+
+  final String? diagnosis;
+  final String? treatmentNotes;
+  final String? prescriptions;
+  final List<File>? uploadedFiles; 
+  MedicalRecord({
+    required this.id,
     required this.petId,
     required this.title,
-    required this.desc,
-    required this.dateTime,
+    required this.description,
+    required this.date,
+    this.diagnosis,
+    this.treatmentNotes,
+    this.prescriptions,
+    this.uploadedFiles,
   });
 
-  MedicalRecords copyWith({
-    String? petId,
-    String? title,
-    String? desc,
-    DateTime? dateTime,
-  }) {
-    return MedicalRecords(
-      petId: petId ?? this.petId,
-      title: title ?? this.title,
-      desc: desc ?? this.desc,
-      dateTime: dateTime ?? this.dateTime,
-    );
-  }
-
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
+      'id': id,
       'petId': petId,
       'title': title,
-      'desc': desc,
-      'dateTime': dateTime.millisecondsSinceEpoch,
+      'description': description,
+      'date': date.toIso8601String(),
+      'diagnosis': diagnosis,
+      'treatmentNotes': treatmentNotes,
+      'prescriptions': prescriptions,
     };
   }
 
-  factory MedicalRecords.fromMap(Map<String, dynamic> map) {
-    return MedicalRecords(
-      petId: map['petId'] as String,
-      title: map['title'] as String,
-      desc: map['desc'] as String,
-      dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime'] as int),
+  factory MedicalRecord.fromMap(Map<String, dynamic> map) {
+    return MedicalRecord(
+      id: map['id'],
+      petId: map['petId'],
+      title: map['title'],
+      description: map['description'],
+      date: DateTime.parse(map['date']),
+      diagnosis: map['diagnosis'],
+      treatmentNotes: map['treatmentNotes'],
+      prescriptions: map['prescriptions'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory MedicalRecords.fromJson(String source) => MedicalRecords.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'MedicalRecords(petId: $petId, title: $title, desc: $desc, dateTime: $dateTime)';
-  }
-
-  @override
-  bool operator ==(covariant MedicalRecords other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.petId == petId &&
-      other.title == title &&
-      other.desc == desc &&
-      other.dateTime == dateTime;
-  }
-
-  @override
-  int get hashCode {
-    return petId.hashCode ^
-      title.hashCode ^
-      desc.hashCode ^
-      dateTime.hashCode;
-  }
+  factory MedicalRecord.fromJson(String source) => MedicalRecord.fromMap(json.decode(source));
 }

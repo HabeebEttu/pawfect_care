@@ -6,6 +6,8 @@ import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
 import 'package:pawfect_care/pages/blog_page.dart';
 import 'package:pawfect_care/pages/register_page.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
+import 'package:pawfect_care/role_wrapper.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
 import 'package:pawfect_care/pages/login_page.dart';
@@ -51,9 +53,8 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
             
             title: "Pawfect Care",
-            home: RegisterPage(),
-            routes: {"/login": (context) => const LoginPage(),
-            },
+            home: RoleWrapper(),
+            routes: AppRoutes.routes,
           );
         },
       ),

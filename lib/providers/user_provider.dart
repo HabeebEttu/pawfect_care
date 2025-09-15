@@ -46,4 +46,18 @@ class UserProvider with ChangeNotifier {
       _setLoading(false);
     }
   }
+
+  Future<void> updateUser(User user) async {
+    _setLoading(true);
+    _setErrorMessage(null);
+
+    try {
+      await _userService.updateUser(user);
+      _setUser(user);
+    } catch (e) {
+      _setErrorMessage(e.toString());
+    } finally {
+      _setLoading(false);
+    }
+  }
 }

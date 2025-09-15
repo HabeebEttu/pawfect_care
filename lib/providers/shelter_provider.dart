@@ -59,4 +59,18 @@ class ShelterProvider with ChangeNotifier {
       _setLoading(false);
     }
   }
+
+  Future<void> updateShelter(AnimalShelter shelter) async {
+    _setLoading(true);
+    _setErrorMessage(null);
+
+    try {
+      await _shelterService.updateShelter(shelter);
+      _setShelter(shelter);
+    } catch (e) {
+      _setErrorMessage(e.toString());
+    } finally {
+      _setLoading(false);
+    }
+  }
 }

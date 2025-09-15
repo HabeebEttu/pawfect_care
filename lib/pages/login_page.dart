@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/pages/forgot_password_page.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
-import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -355,7 +355,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         TextButton(
           onPressed: () {
-            // Handle forgot password
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return const ForgotPasswordPage();
+            },));
           },
           child: Text(
             'Forgot Password?',
@@ -382,20 +384,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     password: _passwordController.text.trim(),
                   );
                   if (mounted && authProvider.user != null) {
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            const PetOwnerDashboard(),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                      ),
-                    );
+                    Navigator.pushReplacementNamed(context, AppRoutes.roleWrapper);
+
                   } else if (mounted && authProvider.errorMessage != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

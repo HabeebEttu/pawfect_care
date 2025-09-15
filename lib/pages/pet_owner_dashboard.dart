@@ -1,10 +1,13 @@
 import 'package:pawfect_care/pages/adoption_history_page.dart';
+import 'package:pawfect_care/pages/appointment_page.dart';
+import 'package:pawfect_care/pages/edit_user_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/models/gender.dart';
 import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 
 
 class PetOwnerDashboard extends StatefulWidget {
@@ -24,7 +27,9 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
       name: 'Whiskers',
       petId: 'whis_1234',
       userId: 'dummy',
+      breed: 'Siamese',
       age: 2,
+      description: '',
       gender: Gender.male,
       photoUrl: 'assets/images/pet_1.png',
       species: 'Cat',
@@ -35,6 +40,8 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
       petId: 'bubb_1234',
       userId: 'dummy',
       age: 4,
+      breed:'Bull Dozer',
+      description: '',
       gender: Gender.female,
       photoUrl: 'assets/images/pet_3.png',
       species: 'Dog',
@@ -45,6 +52,8 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
       petId: 'scob_3434',
       userId: 'dummy',
       age: 5,
+      breed:'Siamese',
+      description: '',
       gender: Gender.male,
       photoUrl: 'assets/images/pet_3.png',
       species: 'Dog',
@@ -176,11 +185,15 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
         ),
         IconButton(
           onPressed: () {
-            // Handle profile
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const EditUserProfilePage(),
+              ),
+            );
           },
           icon: CircleAvatar(
             radius: 16,
-            backgroundColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+            backgroundColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
             child: const Icon(
               Icons.person_outline,
               size: 20,
@@ -230,7 +243,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                 const SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to add pet
+                    Navigator.pushNamed(context, AppRoutes.userAddPet);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PawfectCareTheme.primaryBlue,
@@ -280,7 +293,13 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
           child: _buildQuickActionCard(
             'Book Appointment',
             Icons.calendar_today,
-            () {},
+            () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AppointmentPage(),
+                ),
+              );
+            },
           ),
         ),
         const SizedBox(width: 12),
@@ -362,7 +381,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
           ),
           TextButton(
             onPressed: () {
-              // Navigate to all pets
+              Navigator.pushNamed(context, AppRoutes.userPetDirectory);
             },
             child: Text(
               'View All',
@@ -522,7 +541,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      // Navigate to pet profile
+                      Navigator.pushNamed(context, AppRoutes.userEditPet);
                     },
                     child: Text(
                       'View Profile →',
@@ -667,7 +686,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: appointments.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      separatorBuilder: (context, index) => const SizedBox(width: 12),
       itemBuilder: (context, index) {
         final appointment = appointments[index];
         return _buildAppointmentCard(appointment, isUpcoming);
@@ -788,7 +807,11 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
   Widget _buildFloatingActionButton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        // Navigate to book appointment
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const AppointmentPage(),
+          ),
+        );
       },
       backgroundColor: PawfectCareTheme.primaryBlue,
       foregroundColor: Colors.white,
