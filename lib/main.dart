@@ -2,20 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:pawfect_care/providers/pet_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:pawfect_care/firebase_options.dart';
+import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
-<<<<<<< HEAD
 import 'package:pawfect_care/providers/user_provider.dart';
 import 'package:pawfect_care/providers/medical_record_provider.dart';
 import 'package:pawfect_care/providers/vet_service_provider.dart';
 import 'package:pawfect_care/providers/appointment_provider.dart';
-=======
-import 'package:pawfect_care/role_wrapper.dart';
->>>>>>> caca00d280662a329447727835c186c1bb188143
 import 'package:pawfect_care/routes/app_routes.dart';
-import 'package:provider/provider.dart';
-import 'package:pawfect_care/firebase_options.dart';
-import 'package:pawfect_care/providers/auth_provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:pawfect_care/role_wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +38,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider()..initialize(),
         ),
-<<<<<<< HEAD
         ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
         ChangeNotifierProxyProvider<AuthProvider, PetProvider>(
           create: (context) => PetProvider(Provider.of<AuthProvider>(context, listen: false)),
@@ -55,8 +53,6 @@ class MyApp extends StatelessWidget {
           update: (context, auth, previous) => AppointmentProvider(auth),
         ),
         
-=======
->>>>>>> caca00d280662a329447727835c186c1bb188143
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

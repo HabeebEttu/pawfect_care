@@ -49,7 +49,6 @@
     <string>This app needs access to location when open.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>This app needs access to location when in the background.</string>
-    <key>GMSApiKey</key>
-    <string>YOUR_API_KEY</string>
+    
 </dict>
 </plist>

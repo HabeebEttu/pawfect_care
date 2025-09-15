@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:pawfect_care/models/cart_item.dart';
 import 'package:pawfect_care/models/pet_store_item.dart';
 
@@ -143,6 +142,4 @@ class Cart {
         updatedAt.hashCode;
   }
 }
-=======
 
->>>>>>> caca00d280662a329447727835c186c1bb188143

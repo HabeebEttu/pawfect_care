@@ -105,11 +105,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
               children: [
                 _buildHeader(allArticles.length),
                 _buildSearchAndFilter(),
-                ref.watch(categoriesProvider).when(
-                  data: (categories) => _buildCategoryChips(categories),
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (e, st) => Center(child: Text('Error: $e')),
-                ),
+                _buildCategoryChips(ref.watch(categoriesProvider)),
                 Expanded(
                   child: filteredArticles.isEmpty
                       ? _buildEmptyState()
@@ -400,7 +396,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
   }
 
   Widget _buildArticleImage(Article article, bool isGridView) {
-    return Container(
+    return SizedBox(
       height: isGridView ? 120 : 180,
       width: double.infinity,
       child: Stack(

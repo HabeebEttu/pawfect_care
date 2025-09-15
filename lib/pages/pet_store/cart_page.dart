@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
+import 'package:provider/provider.dart' as pr;
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/providers/pet_store_provider.dart';
-import 'package:provider/provider.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends rp.ConsumerStatefulWidget {
   const CartPage({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  rp.ConsumerState<CartPage> createState() => _CartPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _CartPageState extends rp.ConsumerState<CartPage> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = pr.Provider.of<AuthProvider>(context, listen: false);
       if (authProvider.user != null) {
-        Provider.of<PetStoreProvider>(context, listen: false).fetchCart(authProvider.user!.uid);
+        ref.read(cartProvider.notifier).fetchCart(authProvider.user!.uid);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final petStoreProvider = Provider.of<PetStoreProvider>(context);
+    final authProvider = pr.Provider.of<AuthProvider>(context);
+    final cart = ref.watch(cartProvider);
 
     if (authProvider.user == null) {
       return Scaffold(
@@ -38,8 +39,6 @@ class _CartPageState extends State<CartPage> {
       );
     }
 
-    double totalAmount = petStoreProvider.cartItems.fold(0.0, (sum, item) => sum + (item.item.price * item.quantity));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Cart'),
@@ -47,7 +46,9 @@ class _CartPageState extends State<CartPage> {
           IconButton(
             icon: const Icon(Icons.clear_all),
             onPressed: () async {
-              await petStoreProvider.clearCart(authProvider.user!.uid);
+              await ref
+                  .read(cartProvider.notifier)
+                  .clearCart(authProvider.user!.uid);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Cart cleared!')),
               );
@@ -55,17 +56,17 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-      body: petStoreProvider.isLoading
+      body: cart.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : petStoreProvider.cartItems.isEmpty
+          : cart.items.isEmpty
               ? const Center(child: Text('Your cart is empty.'))
               : Column(
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        itemCount: petStoreProvider.cartItems.length,
+                    itemCount: cart.items.length,
                         itemBuilder: (context, index) {
-                          final item = petStoreProvider.cartItems[index];
+                      final item = cart.items[index];
                           return Card(
                             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             child: ListTile(
@@ -75,7 +76,12 @@ class _CartPageState extends State<CartPage> {
                               trailing: IconButton(
                                 icon: const Icon(Icons.remove_shopping_cart, color: Colors.red),
                                 onPressed: () async {
-                                  await petStoreProvider.removeFromCart(authProvider.user!.uid, item.id);
+                              await ref
+                                  .read(cartProvider.notifier)
+                                  .removeFromCart(
+                                    authProvider.user!.uid,
+                                    item.id,
+                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Removed ${item.item.name} from cart.')),
                                   );
@@ -91,13 +97,19 @@ class _CartPageState extends State<CartPage> {
                       child: Column(
                         children: [
                           Text(
-                            'Total: \$${totalAmount.toStringAsFixed(2)}',
+                        'Total: \$${cart.totalAmount.toStringAsFixed(2)}',
                             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () async {
-                              await petStoreProvider.placeOrder(authProvider.user!.uid, petStoreProvider.cartItems, totalAmount);
+                          await ref
+                              .read(cartProvider.notifier)
+                              .placeOrder(
+                                authProvider.user!.uid,
+                                cart.items,
+                                cart.totalAmount,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Order placed successfully!')),
                               );

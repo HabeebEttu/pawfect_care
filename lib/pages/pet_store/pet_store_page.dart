@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pawfect_care/pages/pet_store/widgets/category_selector.dart';
 import 'package:pawfect_care/pages/pet_store/widgets/store_card.dart';
 import 'package:pawfect_care/pages/pet_store/widgets/store_search_bar.dart';
+import 'package:pawfect_care/providers/blog_provider.dart' as blog_provider;
 import 'package:pawfect_care/providers/pet_store_provider.dart';
 import 'package:pawfect_care/widgets/empty_state.dart';
 import 'package:pawfect_care/widgets/error_state.dart';

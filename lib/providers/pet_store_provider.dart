@@ -1,168 +1,118 @@
-import 'package:flutter/material.dart';
-import 'package:pawfect_care/models/cart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pawfect_care/models/cart_item.dart';
 import 'package:pawfect_care/models/pet_store_item.dart';
 import 'package:pawfect_care/services/pet_store_service.dart';
-import 'package:pawfect_care/providers/auth_provider.dart';
 
-class PetStoreProvider extends ChangeNotifier {
-  final PetStoreService _petStoreService = PetStoreService();
-  final AuthProvider _authProvider;
+final petStoreServiceProvider = Provider((ref) => PetStoreService());
 
-  List<PetStoreItem> _products = [];
-  List<String> _categories = [];
-  List<CartItem> _cartItems = [];
-  bool _isLoading = false;
-  String? _errorMessage;
+final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
+  final petStoreService = ref.watch(petStoreServiceProvider);
+  return CartNotifier(petStoreService);
+});
 
-  PetStoreProvider(this._authProvider) {
-    fetchProducts();
-    fetchCategories();
-    if (_authProvider.user != null) {
-      fetchCart(_authProvider.user!.uid);
-    }
-  }
+class CartState {
+  final List<CartItem> items;
+  final bool isLoading;
+  final String? error;
 
-  List<PetStoreItem> get products => _products;
-  List<String> get categories => _categories;
-  List<CartItem> get cartItems => _cartItems;
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  CartState({this.items = const [], this.isLoading = false, this.error});
 
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
-  }
+  double get totalAmount =>
+      items.fold(0.0, (sum, item) => sum + (item.item.price * item.quantity));
+}
 
-  void _setErrorMessage(String? message) {
-    _errorMessage = message;
-    notifyListeners();
-  }
+class CartNotifier extends StateNotifier<CartState> {
+  final PetStoreService _petStoreService;
 
-  Future<void> fetchProducts() async {
-    _setLoading(true);
-    _setErrorMessage(null);
-    try {
-      _products = await _petStoreService.fetchProducts();
-    } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> fetchCategories() async {
-    _setLoading(true);
-    _setErrorMessage(null);
-    try {
-      _categories = await _petStoreService.fetchCategories();
-    } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> addProduct(PetStoreItem item) async {
-    _setLoading(true);
-    _setErrorMessage(null);
-    try {
-      await _petStoreService.addProduct(item);
-      await fetchProducts(); // Refresh products
-    } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> updateProduct(PetStoreItem item) async {
-    _setLoading(true);
-    _setErrorMessage(null);
-    try {
-      await _petStoreService.updateProduct(item);
-      await fetchProducts(); // Refresh products
-    } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> deleteProduct(String itemId) async {
-    _setLoading(true);
-    _setErrorMessage(null);
-    try {
-      await _petStoreService.deleteProduct(itemId);
-      await fetchProducts(); // Refresh products
-    } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
+  CartNotifier(this._petStoreService) : super(CartState());
 
   Future<void> fetchCart(String userId) async {
-    _setLoading(true);
-    _setErrorMessage(null);
+    state = CartState(isLoading: true);
     try {
-      _cartItems = await _petStoreService.getCart(userId);
+      final items = await _petStoreService.fetchCart(userId);
+      state = CartState(items: items);
     } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
+      state = CartState(error: e.toString());
     }
   }
 
   Future<void> addToCart(String userId, CartItem item) async {
-    _setLoading(true);
-    _setErrorMessage(null);
+    state = CartState(isLoading: true, items: state.items);
     try {
       await _petStoreService.addToCart(userId, item);
-      await fetchCart(userId); // Refresh cart
+      state = CartState(items: [...state.items, item]);
     } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
+      state = CartState(error: e.toString(), items: state.items);
     }
   }
 
-  Future<void> removeFromCart(String userId, String productId) async {
-    _setLoading(true);
-    _setErrorMessage(null);
+  Future<void> removeFromCart(String userId, String itemId) async {
+    state = CartState(isLoading: true, items: state.items);
     try {
-      await _petStoreService.removeFromCart(userId, productId);
-      await fetchCart(userId); // Refresh cart
+      await _petStoreService.removeFromCart(userId, itemId);
+      state = CartState(
+        items: state.items.where((item) => item.id != itemId).toList(),
+      );
     } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
+      state = CartState(error: e.toString(), items: state.items);
     }
   }
 
   Future<void> clearCart(String userId) async {
-    _setLoading(true);
-    _setErrorMessage(null);
+    state = CartState(isLoading: true, items: state.items);
     try {
       await _petStoreService.clearCart(userId);
-      await fetchCart(userId); // Clear cart locally
+      state = CartState();
     } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
+      state = CartState(error: e.toString(), items: state.items);
     }
   }
 
   Future<void> placeOrder(String userId, List<CartItem> items, double totalAmount) async {
-    _setLoading(true);
-    _setErrorMessage(null);
+    state = CartState(isLoading: true, items: state.items);
     try {
       await _petStoreService.placeOrder(userId, items, totalAmount);
-      await fetchCart(userId); // Clear cart after order
+      state = CartState();
     } catch (e) {
-      _setErrorMessage(e.toString());
-    } finally {
-      _setLoading(false);
+      state = CartState(error: e.toString(), items: state.items);
     }
   }
 }
+
+final productsProvider = FutureProvider<List<PetStoreItem>>((ref) async {
+  final petStoreService = ref.watch(petStoreServiceProvider);
+  return petStoreService.fetchProducts();
+});
+
+final categoriesProvider = FutureProvider<List<String>>((ref) async {
+  final petStoreService = ref.watch(petStoreServiceProvider);
+  return petStoreService.fetchCategories();
+});
+
+final searchQueryProvider = StateProvider<String>((ref) => '');
+
+final selectedCategoryProvider = StateProvider<String>((ref) => 'All');
+
+final filteredPetStoreProvider = Provider<AsyncValue<List<PetStoreItem>>>((
+  ref,
+) {
+  final productsAsync = ref.watch(productsProvider);
+  final searchQuery = ref.watch(searchQueryProvider);
+  final selectedCategory = ref.watch(selectedCategoryProvider);
+
+  return productsAsync.when(
+    data: (products) {
+      List<PetStoreItem> filteredList = products.where((item) {
+        final bool matchesCategory =
+            selectedCategory == 'All' || item.category == selectedCategory;
+        final bool matchesSearch =
+            searchQuery.isEmpty ||
+            item.name.toLowerCase().contains(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      }).toList();
+      return AsyncValue.data(filteredList);
+    },
+    loading: () => const AsyncValue.loading(),
+    error: (err, stack) => AsyncValue.error(err, stack),
+  );
+});

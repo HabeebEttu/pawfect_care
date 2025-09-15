@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
-import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/models/appointment.dart';
 import 'package:pawfect_care/providers/appointment_provider.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/pages/book_appointment_page.dart';
 import 'package:pawfect_care/pages/edit_appointment_page.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
@@ -63,7 +63,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
     final pastAppointments = appointmentProvider.appointments.where((app) =>
         app.appointmentTime != null && app.appointmentTime!.isBefore(DateTime.now())).toList();
 
-<<<<<<< HEAD
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -77,86 +76,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Calendar View',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-=======
-                  const SizedBox(height: 20),
-
-                  Text(
-                    "Calendar View",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  TableCalendar(
-                    firstDay: DateTime.utc(2020),
-                    lastDay: DateTime.utc(2030),
-                    focusedDay: DateTime.now(),
-                    calendarFormat: CalendarFormat.month,
-                    headerStyle: const HeaderStyle(
-                      formatButtonVisible: false,
-                      titleCentered: true,
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  const Text(
-                    "Upcoming Appointments",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 12),
-
-                  // Action Buttons
-                  Center(
-                    child: Column(
-                      children: [
-                        FloatingActionButton.extended(
-                          backgroundColor: Colors.blue,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const PetOwnerDashboard(),
-                              ),
-                            );
-                          },
-                          label: Text(
-                            "Book Appointments Now",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        FloatingActionButton.extended(
-                          backgroundColor: Colors.white,
-                          onPressed: () {},
-                          label: Text(
-                            "Reschedule Existing Appointments",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ],
->>>>>>> caca00d280662a329447727835c186c1bb188143
-              ),
               TableCalendar(
                 firstDay: DateTime.utc(2020, 1, 1),
                 lastDay: DateTime.utc(2030, 12, 31),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
                     _selectedDay = selectedDay;
@@ -173,7 +98,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
                 },
-                eventLoader: (day) => _getAppointmentsForDay(day, appointmentProvider.appointments),
+                eventLoader: (day) {
+                  return _getAppointmentsForDay(
+                    day,
+                    Provider.of<AppointmentProvider>(context).appointments,
+                  );
+                },
                 headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
@@ -323,12 +253,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 }
 
-extension on DateTime {
+extension DateTimeFormatting on DateTime {
   String toShortDateString() {
-    return '${year.toString()}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+    return DateFormat('yyyy-MM-dd').format(this);
   }
 
   String toShortTimeString() {
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+    return DateFormat('HH:mm').format(this);
   }
 }

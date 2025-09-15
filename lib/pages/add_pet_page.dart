@@ -8,6 +8,7 @@ import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/providers/pet_provider.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/services/supabase_storage_service.dart';
+import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -195,6 +196,9 @@ class _AddPetPageState extends State<AddPetPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                child: Text('Add Pet',style: PawfectCareTheme.bodyMedium.copyWith(
+                  color: Colors.white,
+                ),),
                 onPressed: ()async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
@@ -246,7 +250,6 @@ class _AddPetPageState extends State<AddPetPage> {
                       shelterId: null, // This pet is added by a user, not a shelter
                     );
 
-<<<<<<< HEAD
                     try {
                       await petProvider.addPet(newPet);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -257,19 +260,14 @@ class _AddPetPageState extends State<AddPetPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Failed to add pet: $e')),
                       );
-=======
-                    if (_photo != null) {
-
->>>>>>> caca00d280662a329447727835c186c1bb188143
                     }
                   }
                 },
-                child: const Text('Add Pet'),
               ),
-            ],
-          ),
+              ]
         ),
       ),
+      )
     );
   }
 }

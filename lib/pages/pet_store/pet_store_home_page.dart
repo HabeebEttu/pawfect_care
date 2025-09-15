@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
+import 'package:provider/provider.dart' as pr;
 import 'package:pawfect_care/models/cart_item.dart';
 import 'package:pawfect_care/models/pet_store_item.dart';
 import 'package:pawfect_care/pages/pet_store/cart_page.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/providers/pet_store_provider.dart';
-import 'package:provider/provider.dart';
 
-class PetStoreHomePage extends StatefulWidget {
+class PetStoreHomePage extends rp.ConsumerStatefulWidget {
   const PetStoreHomePage({super.key});
 
   @override
-  State<PetStoreHomePage> createState() => _PetStoreHomePageState();
+  rp.ConsumerState<PetStoreHomePage> createState() => _PetStoreHomePageState();
 }
 
-class _PetStoreHomePageState extends State<PetStoreHomePage> {
+class _PetStoreHomePageState extends rp.ConsumerState<PetStoreHomePage> {
   String? _selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<PetStoreProvider>(context, listen: false).fetchProducts();
-      Provider.of<PetStoreProvider>(context, listen: false).fetchCategories();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final productsAsyncValue = ref.watch(productsProvider);
+    final categoriesAsyncValue = ref.watch(categoriesProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pet Store'),
@@ -44,13 +44,9 @@ class _PetStoreHomePageState extends State<PetStoreHomePage> {
           ),
         ],
       ),
-      body: Consumer<PetStoreProvider>(
-        builder: (context, petStoreProvider, child) {
-          if (petStoreProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          List<PetStoreItem> filteredProducts = petStoreProvider.products;
+      body: productsAsyncValue.when(
+        data: (products) {
+          List<PetStoreItem> filteredProducts = products;
           if (_selectedCategory != null && _selectedCategory != 'All') {
             filteredProducts = filteredProducts
                 .where((product) => product.category == _selectedCategory)
@@ -65,7 +61,9 @@ class _PetStoreHomePageState extends State<PetStoreHomePage> {
                 child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Category'),
                   value: _selectedCategory,
-                  items: ['All', ...petStoreProvider.categories].map((category) {
+                  items: ['All', ...categoriesAsyncValue.value ?? []].map((
+                    category,
+                  ) {
                     return DropdownMenuItem<String>(
                       value: category,
                       child: Text(category),
@@ -115,13 +113,17 @@ class _PetStoreHomePageState extends State<PetStoreHomePage> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      Text('${product.price.toStringAsFixed(2)}'),
+                                      Text(product.price.toStringAsFixed(2)),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: IconButton(
                                           icon: const Icon(Icons.add_shopping_cart),
                                           onPressed: () {
-                                            final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                                            final authProvider =
+                                                pr.Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false,
+                                                );
                                             if (authProvider.user == null) {
                                               ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(content: Text('Please log in to add items to cart.')),
@@ -131,9 +133,15 @@ class _PetStoreHomePageState extends State<PetStoreHomePage> {
                                             final cartItem = CartItem(
                                               id: product.id,
                                               item: product,
-                                              quantity: 1, // Default to 1
+                                              quantity: 1,
                                             );
-                                            petStoreProvider.addToCart(authProvider.user!.uid, cartItem);
+                                            // Add to cart using cart provider
+                                            ref
+                                                .read(cartProvider.notifier)
+                                                .addToCart(
+                                                  authProvider.user!.uid,
+                                                  cartItem,
+                                                );
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               SnackBar(content: Text('Added ${product.name} to cart!')),
                                             );
@@ -152,6 +160,8 @@ class _PetStoreHomePageState extends State<PetStoreHomePage> {
             ],
           );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, st) => Center(child: Text('Error: $e')),
       ),
     );
   }

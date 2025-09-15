@@ -43,10 +43,38 @@ class PetStoreService {
     await _db.collection('users').doc(userId).collection('cart').doc(productId).delete();
   }
 
-  Future<List<CartItem>> getCart(String userId) async {
-    final snapshot = await _db.collection('users').doc(userId).collection('cart').get();
-    return snapshot.docs.map((doc) => CartItem.fromMap(doc.data())).toList();
+  Future<List<CartItem>> fetchCart(String userId) async {
+    try {
+      final snapshot = await _db
+          .collection('users')
+          .doc(userId)
+          .collection('cart')
+          .get();
+
+      final products = await fetchProducts(); // Fetch all products to ensure we have latest data
+      
+      return snapshot.docs.map((doc) {
+        final cartItem = CartItem.fromMap(doc.data());
+        // Find the corresponding product to ensure we have the latest product data
+        final updatedProduct = products.firstWhere(
+          (p) => p.id == cartItem.item.id,
+          orElse: () => cartItem.item,
+        );
+        // Return updated cart item with latest product data
+        return CartItem(
+          id: cartItem.id,
+          item: updatedProduct,
+          quantity: cartItem.quantity,
+        );
+      }).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch cart: $e');
+    }
   }
+
+  // Keep the old method name as a deprecated alias for backward compatibility
+  @deprecated
+  Future<List<CartItem>> getCart(String userId) => fetchCart(userId);
 
   Future<void> clearCart(String userId) async {
     final batch = _db.batch();
