@@ -21,12 +21,13 @@
  
 ## Features
 - *Interactive UI*
-- *Amazing functonality*
+- *Amazing functionality*
 - *User friendly*
 
 ## Technologies used
  - *Frontend Framework*: Flutter Widgets
- - *Backend logicc*:Dart Code
+ - *Backend logic*:Dart Code
+ - *Cloud Storage*:Firebase
  - *Version Control*:Git 
 
 ## Setups and Installation
@@ -45,7 +46,7 @@
 
 ## Usage
  - Register or Login and select the role that you are or play
- - Access detaile description and images unique to that role
+ - Access detailed description and images unique to that role
 
 ## Contributing
   We welcome contributions! To contribute:
