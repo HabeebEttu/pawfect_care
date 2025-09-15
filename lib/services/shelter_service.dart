@@ -19,4 +19,12 @@ class ShelterService {
     }
     return null;
   }
+
+  // Update a shelter
+  Future<void> updateShelter(AnimalShelter shelter) async {
+    await _firestore
+        .collection('shelters')
+        .doc(shelter.id)
+        .update(shelter.toMap());
+  }
 }

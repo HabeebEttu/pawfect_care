@@ -4,7 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
 import 'package:pawfect_care/pages/blog_page.dart';
+import 'package:pawfect_care/providers/pet_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
+import 'package:pawfect_care/providers/user_provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
 import 'package:pawfect_care/pages/login_page.dart';
@@ -33,6 +36,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider()..initialize(),
         ),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, PetProvider>(
+          create: (context) => PetProvider(Provider.of<AuthProvider>(context, listen: false)),
+          update: (context, auth, previous) => PetProvider(auth),
+        ),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -50,9 +58,8 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
             
             title: "Pawfect Care",
-            home: BlogPage(),
-            routes: {"/login": (context) => const LoginPage(),
-            },
+            home:AnimalShelterDashboard(),
+            routes: AppRoutes.routes,
           );
         },
       ),

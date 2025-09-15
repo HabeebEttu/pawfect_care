@@ -21,7 +21,7 @@ class Pet {
   bool? isNeutered;
   bool? isSpecialNeeds;
   String? shelterId;
-  List<MedicalRecords> medicalRecords;
+  List<MedicalRecord> medicalRecords;
   List<Appointment> appointments;
 
   Pet({
@@ -57,7 +57,7 @@ class Pet {
     bool? isSpayed,
     bool? isNeutered,
     bool? isSpecialNeeds,
-    List<MedicalRecords>? medicalRecords,
+    List<MedicalRecord>? medicalRecords,
     List<Appointment>? appointments,
     String? shelterId
     
@@ -96,8 +96,8 @@ class Pet {
       'isSpayed': isSpayed,
       'isNeutered': isNeutered,
       'isSpecialNeeds': isSpecialNeeds,
-      'medicalRecords': medicalRecords.map((x) => x.toMap()).toList(),
-      'appointments': appointments.map((x) => x.toMap()).toList(),
+      'medicalRecords': medicalRecords.map((x) => (x as MedicalRecord).toMap()).toList(),
+      'appointments': appointments.map((x) => (x as Appointment).toMap()).toList(),
     };
   }
 
@@ -116,8 +116,8 @@ class Pet {
       isSpayed: map['isSpayed'] as bool?,
       isNeutered: map['isNeutered'] as bool?,
       isSpecialNeeds: map['isSpecialNeeds'] as bool?,
-      medicalRecords: (map['medicalRecords'] as List<MedicalRecords>),
-      appointments: (map['appointments'] as List<Appointment>),
+      medicalRecords: List<MedicalRecord>.from(map['medicalRecords']?.map((x) => MedicalRecord.fromMap(x)) ?? []),
+      appointments: List<Appointment>.from(map['appointments']?.map((x) => Appointment.fromMap(x)) ?? []),
     );
   }
   static Gender _genderFromString(String status) {

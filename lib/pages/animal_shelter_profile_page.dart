@@ -1,11 +1,36 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pawfect_care/models/adoption_status.dart';
+import 'package:pawfect_care/models/adoption_record.dart';
+import 'package:pawfect_care/models/pet.dart';
+import 'package:pawfect_care/pages/edit_animal_shelter_profile_page.dart';
+import 'package:pawfect_care/providers/shelter_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:pawfect_care/models/animal_shelter.dart';
+import 'package:pawfect_care/services/user_service.dart';
+import 'package:pawfect_care/services/pet_service.dart';
 
-class AnimalShelterProfilePage extends StatelessWidget {
+import 'package:pawfect_care/providers/shelter_provider.dart';
+import 'package:pawfect_care/models/animal_shelter.dart';
+
+class AnimalShelterProfilePage extends StatefulWidget {
   const AnimalShelterProfilePage({super.key});
+
+  @override
+  State<AnimalShelterProfilePage> createState() => _AnimalShelterProfilePageState();
+}
+
+class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ShelterProvider>(context, listen: false).getShelter('shelter_id');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,37 +47,72 @@ class AnimalShelterProfilePage extends StatelessWidget {
             centerTitle: true,
             automaticallyImplyLeading: false,
             elevation: 0,
+            actions: [
+              Consumer<ShelterProvider>(
+                builder: (context, shelterProvider, child) {
+                  return IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: shelterProvider.shelter == null
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const EditAnimalShelterProfilePage(),
+                              ),
+                            );
+                          },
+                  );
+                },
+              ),
+            ],
           ),
           backgroundColor: value.getThemeData(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: constraints.maxWidth > 600 ? 32 : 16,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
-                        _buildWelcomeSection(),
-                        const SizedBox(height: 32),
-                        _buildSectionHeader('Adoptable Pets', () {}),
-                        const SizedBox(height: 16),
-                        _buildShelterAnimalSection(constraints),
-                        const SizedBox(height: 32),
-                        _buildSectionHeader('Recent Adoption Requests', () {}),
-                        const SizedBox(height: 16),
-                        _buildAdoptionRequestsList(),
-                        const SizedBox(height: 32),
-                        const SuccessStories(),
-                        const SizedBox(height: 32),
-                        const SupportOurCauseForm(),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
+                return Consumer<ShelterProvider>(
+                  builder: (context, shelterProvider, child) {
+                    if (shelterProvider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (shelterProvider.errorMessage != null) {
+                      return Center(child: Text(shelterProvider.errorMessage!));
+                    }
+
+                    if (shelterProvider.shelter == null) {
+                      return const Center(child: Text('No shelter data available.'));
+                    }
+
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth > 600 ? 32 : 16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 24),
+                            _buildWelcomeSection(shelterProvider.shelter),
+                            const SizedBox(height: 32),
+                            _buildSectionHeader('Adoptable Pets', () {}),
+                            const SizedBox(height: 16),
+                            _buildShelterAnimalSection(constraints, shelterProvider.shelter!.animals),
+                            const SizedBox(height: 32),
+                            _buildSectionHeader('Recent Adoption Requests', () {}),
+                            const SizedBox(height: 16),
+                            _buildAdoptionRequestsList(shelterProvider.shelter!.adoptionRecords),
+                            const SizedBox(height: 32),
+                            const SuccessStories(),
+                            const SizedBox(height: 32),
+                            const SupportOurCauseForm(),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -62,7 +122,7 @@ class AnimalShelterProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeSection() {
+  Widget _buildWelcomeSection(AnimalShelter? shelter) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -87,7 +147,7 @@ class AnimalShelterProfilePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome Back!',
+                  'Welcome Back, ${shelter?.name ?? ''}!',
                   style: PawfectCareTheme.headingMedium.copyWith(
                     color: PawfectCareTheme.primaryBlue,
                     fontWeight: FontWeight.bold,
@@ -138,7 +198,7 @@ class AnimalShelterProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildShelterAnimalSection(BoxConstraints constraints) {
+  Widget _buildShelterAnimalSection(BoxConstraints constraints, List<Pet> animals) {
     int crossAxisCount;
     if (constraints.maxWidth > 1200) {
       crossAxisCount = 4;
@@ -159,53 +219,17 @@ class AnimalShelterProfilePage extends StatelessWidget {
         mainAxisSpacing: 16,
         childAspectRatio: 0.75,
       ),
-      itemCount: 6,
-      itemBuilder: (context, index) => _buildAnimalShelterCard(index),
+      itemCount: animals.length,
+      itemBuilder: (context, index) => _buildAnimalShelterCard(animals[index], index),
     );
   }
 
-  Widget _buildAnimalShelterCard(int index) {
-    final animals = [
-      {
-        'name': 'Buddy',
-        'type': 'Dog',
-        'age': '2 years',
-        'tags': ['Vaccinated', 'Trained', 'Friendly'],
-      },
-      {
-        'name': 'Whiskers',
-        'type': 'Cat',
-        'age': '1 year',
-        'tags': ['Vaccinated', 'Indoor', 'Playful'],
-      },
-      {
-        'name': 'Max',
-        'type': 'Dog',
-        'age': '3 years',
-        'tags': ['Vaccinated', 'Active', 'Loyal'],
-      },
-      {
-        'name': 'Luna',
-        'type': 'Cat',
-        'age': '6 months',
-        'tags': ['Vaccinated', 'Curious', 'Gentle'],
-      },
-      {
-        'name': 'Rocky',
-        'type': 'Dog',
-        'age': '4 years',
-        'tags': ['Vaccinated', 'Calm', 'Smart'],
-      },
-      {
-        'name': 'Bella',
-        'type': 'Cat',
-        'age': '2 years',
-        'tags': ['Vaccinated', 'Affectionate', 'Quiet'],
-      },
-    ];
-
-    final animal = animals[index % animals.length];
-
+  Widget _buildAnimalShelterCard(Pet animal, int index) {
+    final List<String> tags = [];
+    if (animal.isVaccinated) tags.add('Vaccinated');
+    if (animal.isSpayed == true) tags.add('Spayed');
+    if (animal.isNeutered == true) tags.add('Neutered');
+    if (animal.isSpecialNeeds == true) tags.add('Special Needs');
     return Card(
       elevation: 4,
       clipBehavior: Clip.antiAlias,
@@ -229,13 +253,13 @@ class AnimalShelterProfilePage extends StatelessWidget {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: Image.asset(
-                    'assets/images/pet_${index % 3 + 1}.png',
+                  child: Image.network(
+                    animal.photoUrl,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey[200],
                       child: Icon(
-                        animal['type'] == 'Dog' ? Icons.pets : Icons.cake,
+                        _getAnimalIcon(animal.species),
                         size: 48,
                         color: Colors.grey[400],
                       ),
@@ -269,7 +293,7 @@ class AnimalShelterProfilePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    animal['name']!.toString(),
+                    animal.name,
                     style: PawfectCareTheme.bodyLarge.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -278,16 +302,18 @@ class AnimalShelterProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${animal['type']} • ${animal['age']}',
+                    '${animal.breed} • ${animal.age} years',
                     style: PawfectCareTheme.bodyMedium.copyWith(
                       color: Colors.grey[600],
                     ),
                   ),
                   const SizedBox(height: 8),
+                  
+
                   Wrap(
                     spacing: 4,
                     runSpacing: 4,
-                    children: (animal['tags'] as List<String>)
+                    children: tags
                         .take(2)
                         .map(
                           (tag) => Container(
@@ -348,123 +374,164 @@ class AnimalShelterProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildAdoptionRequestsList() {
-    final requests = [
-      {
-        'name': 'Alice Johnson',
-        'pet': 'Buddy',
-        'status': 'Pending',
-        'time': '2 hours ago',
-      },
-      {
-        'name': 'John Smith',
-        'pet': 'Whiskers',
-        'status': 'Approved',
-        'time': '5 hours ago',
-      },
-      {
-        'name': 'Emma Davis',
-        'pet': 'Max',
-        'status': 'Under Review',
-        'time': '1 day ago',
-      },
-    ];
+  Widget _buildAdoptionRequestsList(List<AdoptionRecord> adoptionRecords) {
+    final UserService _userService = UserService();
+    final PetService _petService = PetService();
 
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: requests.length,
+      itemCount: adoptionRecords.length,
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
-        final request = requests[index];
-        return Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(16),
-            leading: CircleAvatar(
-              radius: 24,
-              backgroundColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
-              child: Text(
-                request['name']![0],
-                style: TextStyle(
-                  color: PawfectCareTheme.primaryBlue,
-                  fontWeight: FontWeight.bold,
+        final request = adoptionRecords[index];
+        return FutureBuilder<
+            Map<String, dynamic>>(
+          future: Future.wait([
+            _userService.fetchUser(request.userId),
+            _petService.getPetById(request.petId),
+          ]).then((results) {
+            return {
+              'user': results[0],
+              'pet': results[1],
+            };
+          }),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-            ),
-            title: Text(
-              request['name']!,
-              style: PawfectCareTheme.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Interested in: ${request['pet']}'),
-                const SizedBox(height: 4),
-                Text(
-                  request['time']!,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                child: const ListTile(
+                  contentPadding: EdgeInsets.all(16),
+                  leading: CircularProgressIndicator(),
+                  title: Text('Loading...'),
                 ),
-              ],
-            ),
-            trailing: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize:MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(request['status']!).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: _getStatusColor(
-                        request['status']!,
-                      ).withOpacity(0.3),
-                    ),
-                  ),
+              );
+            }
+            if (snapshot.hasError) {
+              return Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16),
+                  leading: const Icon(Icons.error, color: Colors.red),
+                  title: Text('Error: ${snapshot.error}'),
+                ),
+              );
+            }
+            final user = snapshot.data?['user'];
+            final pet = snapshot.data?['pet'];
+            final userName = user?.name ?? 'Unknown User';
+            final petName = pet?.name ?? 'Unknown Pet';
+
+            return Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                leading: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
                   child: Text(
-                    request['status']!,
+                    userName[0],
                     style: TextStyle(
-                      color: _getStatusColor(request['status']!),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      color: PawfectCareTheme.primaryBlue,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[400],
+                title: Text(
+                  userName,
+                  style: PawfectCareTheme.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ],
-            ),
-          ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Interested in: ${petName}'),
+                    const SizedBox(height: 4),
+                    Text(
+                      request.adoptionDate.toString(),
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                    ),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: (switch (request.status) {
+                          AdoptionStatus.approved => Colors.green,
+                          AdoptionStatus.pending => Colors.orange,
+                          AdoptionStatus.rejected => Colors.red,
+                          _ => Colors.grey,
+                        })
+                            .withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: (switch (request.status) {
+                            AdoptionStatus.approved => Colors.green,
+                            AdoptionStatus.pending => Colors.orange,
+                            AdoptionStatus.rejected => Colors.red,
+                            _ => Colors.grey,
+                          })
+                              .withOpacity(0.3),
+                        ),
+                      ),
+                      child: Text(
+                        request.status.toString().split('.').last,
+                        style: TextStyle(
+                          color: switch (request.status) {
+                            AdoptionStatus.approved => Colors.green,
+                            AdoptionStatus.pending => Colors.orange,
+                            AdoptionStatus.rejected => Colors.red,
+                            _ => Colors.grey,
+                          },
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.grey[400],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Approved':
-        return Colors.green;
-      case 'Pending':
-        return Colors.orange;
-      case 'Under Review':
-        return Colors.blue;
+  IconData _getAnimalIcon(String animalType) {
+    switch (animalType) {
+      case 'Dog':
+        return Icons.pets;
+      case 'Cat':
+        return Icons.cake;
       default:
-        return Colors.grey;
+        return Icons.pets;
     }
   }
+
+  
 }
 
 class SuccessStories extends StatelessWidget {
