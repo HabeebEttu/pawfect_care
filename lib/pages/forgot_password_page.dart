@@ -179,7 +179,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+            color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -218,7 +218,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
   Widget _buildFormView() {
     return Card(
       elevation: 8,
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -298,7 +298,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                     foregroundColor: Colors.white,
                     disabledBackgroundColor: PawfectCareTheme.textMuted,
                     elevation: _isLoading ? 0 : 2,
-                    shadowColor: PawfectCareTheme.primaryBlue.withOpacity(0.3),
+                    shadowColor: PawfectCareTheme.primaryBlue.withValues(alpha:
+                        0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -313,7 +314,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white.withOpacity(0.8),
+                                  Colors.white.withValues(alpha: 0.8),
                                 ),
                               ),
                             ),
@@ -321,7 +322,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                             Text(
                               'Sending...',
                               style: PawfectCareTheme.buttonText.copyWith(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                               ),
                             ),
                           ],

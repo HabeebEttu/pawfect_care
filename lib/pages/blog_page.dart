@@ -160,15 +160,15 @@ class _BlogPageState extends ConsumerState<BlogPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            PawfectCareTheme.primaryBlue.withOpacity(0.1),
-            PawfectCareTheme.accentBlue.withOpacity(0.05),
+            PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
+            PawfectCareTheme.accentBlue.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+          color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -199,10 +199,10 @@ class _BlogPageState extends ConsumerState<BlogPage>
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+                    color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: PawfectCareTheme.primaryBlue.withOpacity(0.3),
+                      color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -220,13 +220,13 @@ class _BlogPageState extends ConsumerState<BlogPage>
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+              color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.article,
               size: 32,
-              color: PawfectCareTheme.primaryBlue.withOpacity(0.7),
+              color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -307,7 +307,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
               });
             },
             backgroundColor: Colors.white,
-            selectedColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+            selectedColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
             checkmarkColor: PawfectCareTheme.primaryBlue,
             labelStyle: PawfectCareTheme.bodySmall.copyWith(
               color: isSelected
@@ -372,7 +372,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
   Widget _buildArticleCard(Article article, bool isGridView) {
     return Card(
       elevation: 4,
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -414,7 +414,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
               child: Icon(
                 Icons.pets,
                 size: 48,
-                color: PawfectCareTheme.primaryBlue.withOpacity(0.5),
+                color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.5),
               ),
             ),
             loadingBuilder: (context, child, loadingProgress) {
@@ -436,11 +436,11 @@ class _BlogPageState extends ConsumerState<BlogPage>
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -513,7 +513,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+                color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -570,7 +570,7 @@ class _BlogPageState extends ConsumerState<BlogPage>
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: PawfectCareTheme.errorRed.withOpacity(0.1),
+                color: PawfectCareTheme.errorRed.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -629,13 +629,13 @@ class _BlogPageState extends ConsumerState<BlogPage>
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+                color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.search_off,
                 size: 40,
-                color: PawfectCareTheme.primaryBlue.withOpacity(0.7),
+                color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 24),

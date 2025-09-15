@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pawfect_care/models/animal_shelter.dart';
 import 'package:pawfect_care/providers/shelter_provider.dart';
 import 'package:provider/provider.dart';
 

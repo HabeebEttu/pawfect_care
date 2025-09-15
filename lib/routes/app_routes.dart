@@ -9,9 +9,10 @@ import 'package:pawfect_care/pages/user_add_pet_page.dart';
 import 'package:pawfect_care/pages/user_edit_pet_page.dart';
 import 'package:pawfect_care/pages/user_pet_directory_page.dart';
 import 'package:pawfect_care/pages/edit_user_profile_page.dart';
+import 'package:pawfect_care/role_wrapper.dart';
 
 class AppRoutes {
-  // static const String splash = '/splash';
+  static const String roleWrapper = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String medicalRecordsHistory = '/medicalRecordsHistory';
@@ -25,7 +26,6 @@ class AppRoutes {
 
 
   static Map<String, WidgetBuilder> routes = {
-    // splash: (context) => const SplashScreen(),
     login: (context) => const LoginPage(),
     register: (context) => const RegisterPage(),
     // medicalRecordsHistory: (context) => const MedicalRecordsHistoryPage(),

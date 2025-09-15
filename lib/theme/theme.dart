@@ -100,7 +100,7 @@ class PawfectCareTheme {
     borderRadius: BorderRadius.circular(12),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.05),
+        color: Colors.black.withValues(alpha: 0.05),
         blurRadius: 10,
         offset: const Offset(0, 2),
       ),
@@ -201,7 +201,7 @@ class PawfectCareTheme {
   static final ChipThemeData chipTheme = ChipThemeData(
     backgroundColor: chipBackground,
     selectedColor: primaryBlue,
-    secondarySelectedColor: primaryBlue.withOpacity(0.1),
+    secondarySelectedColor: primaryBlue.withValues(alpha: 0.1),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     labelStyle: const TextStyle(
       fontSize: 12,

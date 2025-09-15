@@ -41,6 +41,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   google_fonts: ^6.3.1
   flutter_spinkit: ^5.2.2
+  table_calendar: ^3.2.0
   mailer: ^6.5.0
   email_validator: '^2.1.17'
   provider: ^6.1.5+1
@@ -58,7 +59,6 @@ dependencies:
   location: ^8.0.1
   geocoding: ^4.0.0
   image_picker: ^1.1.2
-  table_calendar: ^3.1.2
 
 
 

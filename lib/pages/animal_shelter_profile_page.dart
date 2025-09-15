@@ -12,8 +12,6 @@ import 'package:pawfect_care/models/animal_shelter.dart';
 import 'package:pawfect_care/services/user_service.dart';
 import 'package:pawfect_care/services/pet_service.dart';
 
-import 'package:pawfect_care/providers/shelter_provider.dart';
-import 'package:pawfect_care/models/animal_shelter.dart';
 
 class AnimalShelterProfilePage extends StatefulWidget {
   const AnimalShelterProfilePage({super.key});
@@ -128,15 +126,16 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            PawfectCareTheme.primaryBlue.withOpacity(0.1),
-            PawfectCareTheme.accentBlue.withOpacity(0.05),
+            PawfectCareTheme.primaryBlue.withValues(alpha:
+                0.1),
+            PawfectCareTheme.accentBlue.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+          color: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -166,7 +165,8 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
           Icon(
             Icons.pets,
             size: 48,
-            color: PawfectCareTheme.primaryBlue.withOpacity(0.3),
+            color: PawfectCareTheme.primaryBlue.withValues(alpha:
+                0.3),
           ),
         ],
       ),
@@ -246,8 +246,8 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.blue.withOpacity(0.3),
-                        Colors.purple.withOpacity(0.3),
+                        Colors.blue.withValues(alpha: 0.3),
+                        Colors.purple.withValues(alpha: 0.3),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -272,7 +272,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -322,12 +322,13 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: PawfectCareTheme.primaryBlue.withOpacity(
+                              color: PawfectCareTheme.primaryBlue.withValues(alpha:
                                 0.1,
                               ),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: PawfectCareTheme.primaryBlue.withOpacity(
+                                color: PawfectCareTheme.primaryBlue
+                                    .withValues(alpha:
                                   0.3,
                                 ),
                               ),
@@ -437,7 +438,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                 contentPadding: const EdgeInsets.all(16),
                 leading: CircleAvatar(
                   radius: 24,
-                  backgroundColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+                  backgroundColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                   child: Text(
                     userName[0],
                     style: TextStyle(
@@ -479,7 +480,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                           AdoptionStatus.rejected => Colors.red,
                           _ => Colors.grey,
                         })
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: (switch (request.status) {
@@ -488,7 +489,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                             AdoptionStatus.rejected => Colors.red,
                             _ => Colors.grey,
                           })
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -620,7 +621,7 @@ class SuccessStories extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: (story['gradient'] as List<Color>)
-                      .map((color) => color.withOpacity(0.8))
+                      .map((color) => color.withValues(alpha: 0.8))
                       .toList(),
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -631,7 +632,7 @@ class SuccessStories extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -659,7 +660,7 @@ class SuccessStories extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 14,
                       height: 1.3,
                     ),
@@ -673,10 +674,10 @@ class SuccessStories extends StatelessWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
                       ),
                       child: const Text(

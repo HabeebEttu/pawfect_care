@@ -173,7 +173,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
           },
           icon: CircleAvatar(
             radius: 16,
-            backgroundColor: PawfectCareTheme.primaryBlue.withOpacity(0.1),
+            backgroundColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
             child: const Icon(
               Icons.person_outline,
               size: 20,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pawfect_care/models/adoption_record.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:pawfect_care/services/adoption_service.dart';
-import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class AdoptionHistoryPage extends StatelessWidget {

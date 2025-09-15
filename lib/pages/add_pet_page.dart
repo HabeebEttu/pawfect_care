@@ -246,6 +246,7 @@ class _AddPetPageState extends State<AddPetPage> {
                       shelterId: null, // This pet is added by a user, not a shelter
                     );
 
+<<<<<<< HEAD
                     try {
                       await petProvider.addPet(newPet);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -256,6 +257,10 @@ class _AddPetPageState extends State<AddPetPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Failed to add pet: $e')),
                       );
+=======
+                    if (_photo != null) {
+
+>>>>>>> caca00d280662a329447727835c186c1bb188143
                     }
                   }
                 },

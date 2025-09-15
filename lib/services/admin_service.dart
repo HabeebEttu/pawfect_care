@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pawfect_care/models/article.dart';
 import 'package:pawfect_care/models/role.dart';
 import 'package:pawfect_care/models/user.dart';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

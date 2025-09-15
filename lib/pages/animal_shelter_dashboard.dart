@@ -6,7 +6,7 @@ import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:pawfect_care/models/adoption_status.dart';
-import 'package:pawfect_care/models/adoption_status.dart';
+
 
 class AnimalShelterDashboard extends StatefulWidget {
   const AnimalShelterDashboard({super.key});
@@ -71,7 +71,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
                     Navigator.pushNamed(context, AppRoutes.editUserProfile);
                   },
                   child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     child: Icon(Icons.person, color: Colors.white, size: 20),
                   ),
                 ),
@@ -139,7 +139,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
                             Text(
                               'Managing your shelter with love and care',
                               style: PawfectCareTheme.bodyLarge.copyWith(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -423,7 +423,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
             Text(
               label,
               style: PawfectCareTheme.bodySmall.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontSize: 10,
               ),
               textAlign: TextAlign.center,
@@ -448,7 +448,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: gradient[0].withOpacity(0.2),
+            color: gradient[0].withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -479,7 +479,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(icon, color: Colors.white, size: 24),
@@ -502,7 +502,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
                     Text(
                       description,
                       style: PawfectCareTheme.bodySmall.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 12,
                       ),
                     ),
@@ -526,14 +526,14 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with Si
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: PawfectCareTheme.cardDecoration.copyWith(
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),

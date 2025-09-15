@@ -5,7 +5,7 @@ import '../models/status.dart';
 class VetService {
   final _firestore = FirebaseFirestore.instance;
 
-  /// Stream of all appointments (real-time updates)
+  /// streaming of all appointments forreal-time updates
   Stream<List<Appointment>> getAppointmentsStream() {
     return _firestore.collection('appointments').snapshots().map((snapshot) {
       return snapshot.docs
@@ -14,7 +14,7 @@ class VetService {
     });
   }
 
-  /// Fetch only today's appointments for a specific vet (one-time fetch)
+  /// Fetch only today's appointments for a specific vet
   Future<List<Appointment>> fetchTodayAppointments(String vetId) async {
     final today = DateTime.now();
     final start = DateTime(today.year, today.month, today.day);
@@ -32,11 +32,11 @@ class VetService {
         .toList();
   }
 
-  /// Update appointment status (Accept or Decline)
+  
   Future<void> updateAppointmentStatus(
       String appointmentId, Status status) async {
     await _firestore.collection('appointments').doc(appointmentId).update({
-      'appointmentStatus': status.name, // ✅ store as string
+      'appointmentStatus': status.name, // store as string
     });
   }
 
@@ -44,14 +44,13 @@ class VetService {
   Future<void> rescheduleAppointment(
       String appointmentId, DateTime newTime) async {
     await _firestore.collection('appointments').doc(appointmentId).update({
-      'dateTime': newTime, // ✅ keep field name consistent
-      'appointmentStatus': Status.RESCHEDULED, // ✅ use .name
+      'dateTime': newTime, //  keep field name consistent
+      'appointmentStatus': Status.RESCHEDULED, //  use .name
     });
   }
 
   Future<List<DateTime>> getAvailableSlots(String vetId) async {
-    // In a real app, you would fetch this from a database.
-    // For now, we'll return a static list.
+   
     return [
       DateTime.now().add(Duration(hours: 2)),
       DateTime.now().add(Duration(days: 1, hours: 3)),
