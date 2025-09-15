@@ -39,13 +39,13 @@ class User {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'email': email,
       'name': name,
       'phone': phone,
       'profile': profile.toMap(),
       'userId': userId,
-      'role': role.toString(),
+      'role': role.name,           // <-- save just 'user', 'vet', etc.
     };
   }
 
@@ -53,12 +53,16 @@ class User {
     return User(
       email: map['email'] as String,
       name: map['name'] as String,
-      phone: map['phone'] != null ? map['phone'] as String : null,
+      phone: map['phone'] as String?,
       profile: Profile.fromMap(map['profile'] as Map<String, dynamic>),
       userId: map['userId'] as String,
-      role: Role.values.firstWhere((e) => e.toString() == map['role']),
+      role: Role.values.firstWhere(
+            (e) => e.name == map['role'],           // <-- compare to .name
+        orElse: () => Role.user,                // optional safe default
+      ),
     );
   }
+
 
   String toJson() => json.encode(toMap());
 

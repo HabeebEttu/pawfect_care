@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
 import 'package:pawfect_care/pages/blog_page.dart';
+import 'package:pawfect_care/pages/register_page.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
             
             title: "Pawfect Care",
-            home: BlogPage(),
+            home: RegisterPage(),
             routes: {"/login": (context) => const LoginPage(),
             },
           );
