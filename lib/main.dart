@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:pawfect_care/pages/splash_screen.dart';
 import 'package:pawfect_care/providers/pet_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -68,9 +69,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: themeProvider.getThemeData(context),
-            
             title: "Pawfect Care",
-            home: RoleWrapper(),
+            home: const SplashScreen(),
             routes: AppRoutes.routes,
           );
         },
