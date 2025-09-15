@@ -48,4 +48,14 @@ class VetService {
       'appointmentStatus': Status.RESCHEDULED, // ✅ use .name
     });
   }
+
+  Future<List<DateTime>> getAvailableSlots(String vetId) async {
+    // In a real app, you would fetch this from a database.
+    // For now, we'll return a static list.
+    return [
+      DateTime.now().add(Duration(hours: 2)),
+      DateTime.now().add(Duration(days: 1, hours: 3)),
+      DateTime.now().add(Duration(days: 2, hours: 5)),
+    ];
+  }
 }

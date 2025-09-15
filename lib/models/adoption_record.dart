@@ -48,4 +48,20 @@ class AdoptionRecord {
 
   factory AdoptionRecord.fromJson(String source) =>
       AdoptionRecord.fromMap(json.decode(source));
+
+  AdoptionRecord copyWith({
+    String? adoptionId,
+    String? petId,
+    String? userId,
+    DateTime? adoptionDate,
+    AdoptionStatus? status,
+  }) {
+    return AdoptionRecord(
+      adoptionId: adoptionId ?? this.adoptionId,
+      petId: petId ?? this.petId,
+      userId: userId ?? this.userId,
+      adoptionDate: adoptionDate ?? this.adoptionDate,
+      status: status ?? this.status,
+    );
+  }
 }

@@ -15,12 +15,27 @@ class AnimalShelterDashboard extends StatefulWidget {
   State<AnimalShelterDashboard> createState() => _AnimalShelterDashboardState();
 }
 
-class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
+class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ShelterProvider>(context, listen: false).getShelter('shelter_id'); // Replace 'shelter_id' with actual shelter ID
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-     return 
-    Consumer<ThemeProvider>(
+    return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -212,7 +227,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
                           mainAxisSpacing: 16,
                           childAspectRatio: childAspectRatio,
                           children: [
-                            _buildActionCard(
+                                                        _buildActionCard(
                               context,
                               icon: Icons.add_circle_outline,
                               label: 'Add Pet',
@@ -231,23 +246,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
                                 );
                               },
                             ),
-                            _buildActionCard(
-                              context,
-                              icon: Icons.edit_note,
-                              label: 'Update Profile',
-                              description: 'Edit pet information',
-                              gradient: [
-                                PawfectCareTheme.primaryBlue,
-                                PawfectCareTheme.lightBlue,
-                              ],
-                              illustration: '✏️',
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.editPetProfile,
-                                );
-                              },
-                            ),
+
                             _buildActionCard(
                               context,
                               icon: Icons.volunteer_activism,
@@ -287,8 +286,8 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
                             _buildActionCard(
                               context,
                               icon: Icons.pets,
-                              label: 'View All Pets',
-                              description: 'Browse pet directory',
+                              label: 'Manage All Pets',
+                              description: 'View and edit pet profiles',
                               gradient: [
                                 PawfectCareTheme.accentBlue,
                                 PawfectCareTheme.lightBlue,
@@ -300,20 +299,7 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
                                   AppRoutes.petDirectory,
                                 );
                               },
-                            ),
-                            _buildActionCard(
-                              context,
-                              icon: Icons.delete_outline,
-                              label: 'Archive Pet',
-                              description: 'Remove pet records',
-                              gradient: [
-                                PawfectCareTheme.errorRed,
-                                PawfectCareTheme.errorRed.withOpacity(0.7),
-                              ],
-                              illustration: '📋',
-                              onTap: () => _showRemoveDialog(context),
-                            ),
-                          ],
+                            ),]
                         );
                       },
                     ),
@@ -579,81 +565,5 @@ class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
     );
   }
 
-  void _showActionDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Text(title, style: PawfectCareTheme.headingSmall),
-          content: Text(message, style: PawfectCareTheme.bodyMedium),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: PawfectCareTheme.primaryBlue,
-              ),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  void _showRemoveDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Text(
-            'Archive Pet',
-            style: PawfectCareTheme.headingSmall.copyWith(
-              color: PawfectCareTheme.errorRed,
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to archive this pet record? This action can be undone later.',
-            style: PawfectCareTheme.bodyMedium,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: PawfectCareTheme.textSecondary),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Pet archived successfully'),
-                    backgroundColor: PawfectCareTheme.successGreen,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: PawfectCareTheme.errorRed,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('Archive'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 

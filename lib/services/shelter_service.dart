@@ -27,4 +27,9 @@ class ShelterService {
         .doc(shelter.id)
         .update(shelter.toMap());
   }
+
+  Future<List<AnimalShelter>> fetchAllShelters() async {
+    final snapshot = await _firestore.collection('shelters').get();
+    return snapshot.docs.map((doc) => AnimalShelter.fromMap(doc.data())).toList();
+  }
 }

@@ -25,6 +25,10 @@ class PetProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> loadUserPets() async {
+    await _loadPets();
+  }
+
   Future<void> addPet(Pet pet) async {
     if (_authProvider.user != null) {
       _setLoading(true);

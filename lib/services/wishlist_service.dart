@@ -31,7 +31,7 @@ class WishlistService {
         .get();
 
     return snapshot.docs
-        .map((doc) => PetStoreItem.fromMap(doc.data(), doc.id))
+        .map((doc) => PetStoreItem.fromMap(doc.data()))
         .toList();
   }
 

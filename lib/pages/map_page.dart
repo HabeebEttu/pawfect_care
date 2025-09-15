@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:pawfect_care/models/animal_shelter.dart';
 import 'package:pawfect_care/models/location.dart' as loc;
 import 'package:pawfect_care/services/location_service.dart';
-
+import 'package:pawfect_care/providers/shelter_provider.dart';
+import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -15,43 +17,17 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final LocationService _locationService = LocationService();
-  GoogleMapController? _mapController;
+  MapController? _mapController;
   LocationData? _currentLocation;
-  final Set<Marker> _markers = {};
-
-  final List<AnimalShelter> _animalShelters = [
-    AnimalShelter(
-      id: '1',
-      name: 'Happy Paws Shelter',
-      contactPhone: '555-1234',
-      contactEmail: 'info@happypaws.com',
-      animals: [],
-      adoptionRecords: [],
-      location: loc.Location(
-        address: '123 Main St, Anytown, USA',
-        latitude: 37.4223,
-        longitude: -122.0848,
-      )
-    ),
-    AnimalShelter(
-      id: '2',
-      name: 'Furry Friends Rescue',
-      contactPhone: '0907864321',
-      contactEmail: 'contact@furryfriends.com',
-      animals: [],
-      adoptionRecords: [],
-      location:loc.Location(
-        address: '',
-        latitude: 37.4223, longitude: -122.0848,
-      )
-    ),
-  ];
+  final List<Marker> _markers = [];
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
-    _setMarkers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ShelterProvider>(context, listen: false).fetchAllShelters();
+    });
   }
 
   void _getCurrentLocation() async {
@@ -60,27 +36,22 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         _currentLocation = locationData;
       });
-      _mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(locationData.latitude!, locationData.longitude!),
-            zoom: 14,
-          ),
-        ),
+      _mapController?.move(
+        LatLng(locationData.latitude!, locationData.longitude!),
+        14,
       );
     }
   }
 
-  void _setMarkers() {
-    for (final shelter in _animalShelters) {
+  void _setMarkers(List<AnimalShelter> shelters) {
+    _markers.clear(); // Clear existing markers
+    for (final shelter in shelters) {
       _markers.add(
         Marker(
-          markerId: MarkerId(shelter.id),
-          position: LatLng(shelter.location.latitude, shelter.location.longitude),
-          infoWindow: InfoWindow(
-            title: shelter.name,
-            snippet: shelter.location.address,
-          ),
+          point: LatLng(shelter.location.latitude, shelter.location.longitude),
+          width: 80,
+          height: 80,
+          child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
         ),
       );
     }
@@ -92,19 +63,32 @@ class _MapPageState extends State<MapPage> {
       appBar: AppBar(
         title: const Text('Animal Shelters'),
       ),
-      body: GoogleMap(
-        onMapCreated: (controller) {
-          _mapController = controller;
+      body: Consumer<ShelterProvider>(
+        builder: (context, shelterProvider, child) {
+          if (shelterProvider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          _setMarkers(shelterProvider.allShelters); // Update markers when shelters change
+
+          return FlutterMap(
+            options: MapOptions(
+              center: _currentLocation != null
+                  ? LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)
+                  : const LatLng(37.4223, -122.0848), // Default to GooglePlex
+              zoom: 14,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.app',
+              ),
+              MarkerLayer(
+                markers: _markers,
+              ),
+            ],
+          );
         },
-        initialCameraPosition: CameraPosition(
-          target: _currentLocation != null
-              ? LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)
-              : const LatLng(37.4223, -122.0848), // Default to GooglePlex
-          zoom: 14,
-        ),
-        markers: _markers,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
       ),
     );
   }

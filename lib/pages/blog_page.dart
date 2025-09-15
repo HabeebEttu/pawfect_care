@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pawfect_care/providers/blog_provider.dart';
 import 'package:pawfect_care/models/article.dart';
 import 'package:pawfect_care/theme/theme.dart';
+import 'package:pawfect_care/pages/article_detail_page.dart';
 
 class BlogPage extends ConsumerStatefulWidget {
   const BlogPage({super.key});
@@ -22,16 +23,6 @@ class _BlogPageState extends ConsumerState<BlogPage>
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-
-  final List<String> _categories = [
-    'All',
-    'Pet Care',
-    'Health Tips',
-    'Training',
-    'Nutrition',
-    'Behavior',
-    'General',
-  ];
 
   @override
   void initState() {
@@ -99,32 +90,26 @@ class _BlogPageState extends ConsumerState<BlogPage>
 
   @override
   Widget build(BuildContext context) {
-    final blogService = ref.read(blogServiceProvider);
+    final articlesAsyncValue = ref.watch(articlesProvider);
+    final categoriesAsyncValue = ref.watch(categoriesProvider);
 
     return Scaffold(
       backgroundColor: PawfectCareTheme.backgroundWhite,
       appBar: _buildAppBar(),
-      body: FutureBuilder<List<Article>>(
-        future: blogService.getAllArticles(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildLoadingState();
-          }
-
-          if (snapshot.hasError) {
-            return _buildErrorState(snapshot.error.toString());
-          }
-
-          final allArticles = snapshot.data ?? [];
+      body: articlesAsyncValue.when(
+        data: (allArticles) {
           final filteredArticles = _filterArticles(allArticles);
-
           return FadeTransition(
             opacity: _fadeAnimation,
             child: Column(
               children: [
                 _buildHeader(allArticles.length),
                 _buildSearchAndFilter(),
-                _buildCategoryChips(),
+                ref.watch(categoriesProvider).when(
+                  data: (categories) => _buildCategoryChips(categories),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, st) => Center(child: Text('Error: $e')),
+                ),
                 Expanded(
                   child: filteredArticles.isEmpty
                       ? _buildEmptyState()
@@ -134,6 +119,8 @@ class _BlogPageState extends ConsumerState<BlogPage>
             ),
           );
         },
+        loading: () => _buildLoadingState(),
+        error: (e, st) => _buildErrorState(e.toString()),
       ),
     );
   }
@@ -298,17 +285,17 @@ class _BlogPageState extends ConsumerState<BlogPage>
     );
   }
 
-  Widget _buildCategoryChips() {
+  Widget _buildCategoryChips(List<String> categories) {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: _categories.length,
+        itemCount: categories.length,
         separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          final category = _categories[index];
+          final category = categories[index];
           final isSelected = category == _selectedCategory;
 
           return FilterChip(
@@ -390,7 +377,12 @@ class _BlogPageState extends ConsumerState<BlogPage>
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          // Navigate to article detail page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ArticleDetailPage(article: article),
+            ),
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

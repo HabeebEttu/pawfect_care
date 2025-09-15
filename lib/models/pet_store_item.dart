@@ -15,9 +15,9 @@ const PetStoreItem({
   required this.price
 });
 
-  factory PetStoreItem.fromMap(Map<String, dynamic> data, String documentId) {
+  factory PetStoreItem.fromMap(Map<String, dynamic> data) {
     return PetStoreItem(
-      id: documentId,
+      id: data['id'],
       name: data['name'],
       imageUrl: data['imageUrl'] ?? '',
       description: data['description'] ?? '',
@@ -28,6 +28,7 @@ const PetStoreItem({
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'imageUrl': imageUrl,
       'description': description,

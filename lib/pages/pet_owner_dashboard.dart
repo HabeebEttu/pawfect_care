@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:pawfect_care/models/gender.dart';
 import 'package:pawfect_care/models/pet.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
+import 'package:pawfect_care/providers/pet_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:pawfect_care/providers/appointment_provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
+import 'package:intl/intl.dart';
+import 'package:pawfect_care/models/appointment.dart';
+import 'package:pawfect_care/models/status.dart';
 
 
 class PetOwnerDashboard extends StatefulWidget {
@@ -22,44 +27,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
   late TabController _tabController;
   final PageController _pageController = PageController();
 
-  List<Pet> dummyPets = [
-    Pet(
-      name: 'Whiskers',
-      petId: 'whis_1234',
-      userId: 'dummy',
-      breed: 'Siamese',
-      age: 2,
-      description: '',
-      gender: Gender.male,
-      photoUrl: 'assets/images/pet_1.png',
-      species: 'Cat',
-      isVaccinated: true,
-    ),
-    Pet(
-      name: 'Bubbles',
-      petId: 'bubb_1234',
-      userId: 'dummy',
-      age: 4,
-      breed:'Bull Dozer',
-      description: '',
-      gender: Gender.female,
-      photoUrl: 'assets/images/pet_3.png',
-      species: 'Dog',
-      isVaccinated: false,
-    ),
-    Pet(
-      name: 'Scooby',
-      petId: 'scob_3434',
-      userId: 'dummy',
-      age: 5,
-      breed:'Siamese',
-      description: '',
-      gender: Gender.male,
-      photoUrl: 'assets/images/pet_3.png',
-      species: 'Dog',
-      isVaccinated: true,
-    ),
-  ];
+  
 
   int _selectedIndex = 0;
 
@@ -79,6 +47,9 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AppointmentProvider>(context, listen: false).fetchAppointmentsForUser();
+    });
   }
 
   @override
@@ -118,7 +89,16 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                       const SizedBox(height: 24),
                       _buildQuickActionsRow(),
                       const SizedBox(height: 32),
-                      ..._buildPetsSection(context, dummyPets),
+                      Consumer<PetProvider>(
+                        builder: (context, petProvider, child) {
+                          if (petProvider.isLoading) {
+                            return const CircularProgressIndicator();
+                          }
+                          return Column(
+                            children: _buildPetsSection(context, petProvider.pets),
+                          );
+                        },
+                      ),
                       const SizedBox(height: 32),
                       _buildAppointmentsSection(themeProvider),
                       const SizedBox(height: 24),
@@ -396,15 +376,15 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
       const SizedBox(height: 16),
       SizedBox(
         height: 200,
-        child: pets.isEmpty
+        child: Provider.of<PetProvider>(context).pets.isEmpty
             ? _buildEmptyPetsState()
             : ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
-                itemCount: pets.length,
+                itemCount: Provider.of<PetProvider>(context).pets.length,
                 separatorBuilder: (context, index) => const SizedBox(width: 16),
                 itemBuilder: (context, index) {
-                  return _buildPetCard(pets[index], context);
+                  return _buildPetCard(Provider.of<PetProvider>(context).pets[index], context);
                 },
               ),
       ),
@@ -619,85 +599,67 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
   }
 
   Widget _buildAppointmentsList(bool isUpcoming, ThemeProvider themeProvider) {
-    final List<Map<String, dynamic>> appointments = isUpcoming
-        ? [
-            {
-              'date': 'Dec 23, 2024',
-              'time': '10:00 AM',
-              'vet': 'Dr. Emily White',
-              'service': 'Annual Check-up',
-              'pet': 'Whiskers',
-              'status': 'Confirmed',
-              'statusColor': Colors.green,
-            },
-            {
-              'date': 'Dec 28, 2024',
-              'time': '2:30 PM',
-              'vet': 'Dr. Michael Brown',
-              'service': 'Vaccination',
-              'pet': 'Bubbles',
-              'status': 'Pending',
-              'statusColor': Colors.orange,
-            },
-          ]
-        : [
-            {
-              'date': 'Nov 15, 2024',
-              'time': '11:00 AM',
-              'vet': 'Dr. Sarah Johnson',
-              'service': 'Dental Cleaning',
-              'pet': 'Scooby',
-              'status': 'Completed',
-              'statusColor': Colors.blue,
-            },
-            {
-              'date': 'Oct 20, 2024',
-              'time': '3:00 PM',
-              'vet': 'Dr. Emily White',
-              'service': 'Health Check',
-              'pet': 'Whiskers',
-              'status': 'Completed',
-              'statusColor': Colors.blue,
-            },
-          ];
+    return Consumer<AppointmentProvider>(
+      builder: (context, appointmentProvider, child) {
+        if (appointmentProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-    if (appointments.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isUpcoming ? Icons.event_available : Icons.history,
-              size: 48,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              isUpcoming ? 'No upcoming appointments' : 'No past appointments',
-              style: PawfectCareTheme.bodyLarge.copyWith(
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+        if (appointmentProvider.errorMessage != null) {
+          return Center(child: Text(appointmentProvider.errorMessage!));
+        }
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: appointments.length,
-      separatorBuilder: (context, index) => const SizedBox(width: 12),
-      itemBuilder: (context, index) {
-        final appointment = appointments[index];
-        return _buildAppointmentCard(appointment, isUpcoming);
+        final now = DateTime.now();
+        final appointments = appointmentProvider.appointments.where((a) {
+          if (a.appointmentTime == null) return false;
+          return isUpcoming ? a.appointmentTime!.isAfter(now) : a.appointmentTime!.isBefore(now);
+        }).toList();
+
+        if (appointments.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isUpcoming ? Icons.event_available : Icons.history,
+                  size: 48,
+                  color: Colors.grey.shade400,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  isUpcoming ? 'No upcoming appointments' : 'No past appointments',
+                  style: PawfectCareTheme.bodyLarge.copyWith(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: appointments.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            final appointment = appointments[index];
+            return _buildAppointmentCard(appointment, isUpcoming);
+          },
+        );
       },
     );
   }
 
   Widget _buildAppointmentCard(
-    Map<String, dynamic> appointment,
+    Appointment appointment,
     bool isUpcoming,
   ) {
+    final statusColor = appointment.appointmentStatus == Status.CONFIRMED
+        ? Colors.green
+        : appointment.appointmentStatus == Status.PENDING
+        ? Colors.orange
+        : Colors.red;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -728,7 +690,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${appointment['date']} • ${appointment['time']}',
+                      '${DateFormat('MMM d, yyyy').format(appointment.appointmentTime!)} • ${DateFormat('hh:mm a').format(appointment.appointmentTime!)}',
                       style: PawfectCareTheme.bodyLarge.copyWith(
                         fontWeight: FontWeight.w600,
                         color: PawfectCareTheme.textPrimary,
@@ -736,7 +698,7 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Pet: ${appointment['pet']}',
+                      'Pet: ${appointment.petId}',
                       style: PawfectCareTheme.bodyMedium.copyWith(
                         color: PawfectCareTheme.textSecondary,
                       ),
@@ -750,13 +712,13 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: appointment['statusColor'].withOpacity(0.15),
+                  color: statusColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  appointment['status'],
+                  appointment.appointmentStatus.name,
                   style: PawfectCareTheme.bodySmall.copyWith(
-                    color: appointment['statusColor'],
+                    color: statusColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -765,13 +727,13 @@ class _PetOwnerDashboardState extends State<PetOwnerDashboard>
           ),
           const SizedBox(height: 12),
           Text(
-            'Vet: ${appointment['vet']}',
+            'Vet: ${appointment.vetId}',
             style: PawfectCareTheme.bodyMedium.copyWith(
               color: PawfectCareTheme.textSecondary,
             ),
           ),
           Text(
-            'Service: ${appointment['service']}',
+            'Service: ${appointment.service}',
             style: PawfectCareTheme.bodyMedium.copyWith(
               color: PawfectCareTheme.textSecondary,
             ),

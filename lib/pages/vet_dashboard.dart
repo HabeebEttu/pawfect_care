@@ -1,9 +1,13 @@
 
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:pawfect_care/models/pet.dart";
 import "package:pawfect_care/pages/add_medical_record_form.dart";
 import "package:pawfect_care/pages/medical_record_details.dart";
 import "package:pawfect_care/pages/assigned_pet_details_page.dart";
+import "package:pawfect_care/providers/auth_provider.dart";
+import "package:pawfect_care/providers/medical_record_provider.dart";
+import "package:pawfect_care/providers/pet_provider.dart";
 import "package:pawfect_care/providers/theme_provider.dart";
 import "package:pawfect_care/providers/vet_service_provider.dart";
 import "package:pawfect_care/theme/theme.dart";
@@ -35,125 +39,35 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
 
   String searchQuery = '';
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.user != null) {
+        Provider.of<VetProvider>(context, listen: false).fetchTodayAppointments(authProvider.user!.uid);
+        Provider.of<PetProvider>(context, listen: false).loadUserPets();
+       
+        final petProvider = Provider.of<PetProvider>(context, listen: false);
+        if (petProvider.pets.isNotEmpty) {
+          Provider.of<MedicalRecordProvider>(context, listen: false).fetchMedicalRecords(petProvider.pets.first.petId);
+        }
+        Provider.of<VetProvider>(context, listen: false).fetchAvailableSlots(authProvider.user!.uid);
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
 
     final vetProvider = Provider.of<VetProvider>(context);
+    final petProvider = Provider.of<PetProvider>(context);
+    final medicalRecordProvider = Provider.of<MedicalRecordProvider>(context);
+
     final appointments = vetProvider.appointments;
-
-    // final List<Appointment> appointments = [
-    //   Appointment(
-    //     id: 'a1',
-    //     petId: 'p1',
-    //     vetId: 'v1',
-    //     ownerId: 'Habeeb',
-    //     appointmentTime: DateTime(2025, 9, 13, 10, 0),
-    //     appointmentStatus: Status.CONFIRMED,
-    //     notes: 'Bring vaccination card.',
-    //     service: 'Annual Checkup',
-    //   ),
-    //   Appointment(
-    //     id: 'a2',
-    //     petId: 'p2',
-    //     vetId: 'v1',
-    //     ownerId: 'Mark',
-    //     appointmentTime: DateTime(2025, 9, 13, 12, 30),
-    //     appointmentStatus: Status.PENDING,
-    //     notes: 'Fasting required before visit.',
-    //     service: 'Blood Test',
-    //   ),
-    //   Appointment(
-    //     id: 'a3',
-    //     petId: 'p3',
-    //     vetId: 'v2',
-    //     ownerId: 'Paul',
-    //     appointmentTime: DateTime(2025, 9, 13, 15, 45),
-    //     appointmentStatus: Status.CANCELLED,
-    //     notes: 'Reschedule for next week.',
-    //     service: 'Dental Cleaning',
-    //   ),
-    // ];
-
-    List<Map<String, dynamic>> myAssignedPets = [
-      {
-        "name": 'Whiskers',
-        "petId": 'whis_1234',
-        "owner": 'Eduvie',
-        "photoUrl": 'assets/images/pet_1.png',
-        "species": 'Cat',
-      },
-      {
-        "name": 'Bubbles',
-        "petId": 'bubb_1234',
-        "owner": 'Nsikak',
-        "photoUrl": 'assets/images/pet_2.png',
-        "species": 'German Shepard',
-      },
-      {
-        "name": 'Scooby',
-        "petId": 'scob_3434',
-        "owner": 'Abbas',
-        "photoUrl": 'assets/images/pet_3.png',
-        "species": 'Dog',
-      },
-      {
-        "name": 'Mooley',
-        "petId": 'moo_3434',
-        "owner": 'Habeeb',
-        "photoUrl": 'assets/images/pet_2.png',
-        "species": 'Rotweiler',
-      },
-      {
-        "name": 'Mufasa',
-        "petId": 'muf_3434',
-        "owner": 'Israel',
-        "photoUrl": 'assets/images/pet_1.png',
-        "species": 'Acacian',
-      }
-    ];
-
-    final List<MedicalRecord> medicalRecords = [
-      MedicalRecord(
-        id: '1',
-        petId: 'p1',
-        title: 'Annual Checkup',
-        description: 'Routine examination and vaccinations.',
-        date: DateTime(2025, 9, 10),
-        diagnosis: 'Healthy',
-        treatmentNotes: 'Vaccinated against rabies and parvo.',
-        prescriptions: 'Vitamin supplements for 1 month',
-        uploadedFiles: [],
-      ),
-      MedicalRecord(
-        id: '2',
-        petId: 'p2',
-        title: 'Dental Cleaning',
-        description: 'Teeth cleaning and oral health check.',
-        date: DateTime(2025, 8, 20),
-        diagnosis: 'Mild tartar buildup',
-        treatmentNotes: 'Teeth cleaned and gums examined',
-        prescriptions: 'Daily dental chews',
-        uploadedFiles: [],
-      ),
-      MedicalRecord(
-        id: '3',
-        petId: 'p3',
-        title: 'Surgery Follow-up',
-        description: 'Post-surgery checkup and stitches removal.',
-        date: DateTime(2025, 7, 30),
-        diagnosis: 'Recovering well',
-        treatmentNotes: 'Stitches removed, wound clean',
-        prescriptions: 'Painkillers for 3 days',
-        uploadedFiles: [],
-      ),
-    ];
-
-    final List<DateTime> availableSlots = [
-      DateTime.now().add(Duration(hours: 2)),
-      DateTime.now().add(Duration(days: 1, hours: 3)),
-      DateTime.now().add(Duration(days: 2, hours: 5)),
-    ];
+    final myAssignedPets = petProvider.pets;
+    final medicalRecords = medicalRecordProvider.medicalRecords;
 
 
     final filteredAppointments = appointments.where((a) {
@@ -212,74 +126,114 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
               children: [
 
 
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextField(
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                                ),
-                                labelText: 'Search by Pet ID or Owner Name',
-                                prefixIcon: Icon(Icons.search),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              onChanged: (query) {
-                                setState(() {
-                                  searchQuery = query ?? '';
-                                });
-                              },
-                            ),
-                            SizedBox(height: 12),
-                            Row(
+                Consumer<PetProvider>(
+                  builder: (context, petProvider, child) {
+                    if (petProvider.isLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    if (petProvider.pets.isEmpty) {
+                      return Center(child: Text('No pets assigned.'));
+                    }
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    selectedDate == null
-                                        ? 'Filter by Date: All'
-                                        : 'Selected: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
+                                TextField(
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide(color: Colors.blue, width: 1.5),
+                                    ),
+                                    labelText: 'Search by Pet ID or Owner Name',
+                                    prefixIcon: Icon(Icons.search),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.calendar_today),
-                                  onPressed: () async {
-                                    final picked = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2020),
-                                      lastDate: DateTime(2030),
-                                    );
-                                    if (picked != null) {
-                                      setState(() => selectedDate = picked);
-                                    }
+                                  onChanged: (query) {
+                                    setState(() {
+                                      searchQuery = query ?? '';
+                                    });
                                   },
                                 ),
-                                if (selectedDate != null)
-                                  IconButton(
-                                    icon: Icon(Icons.clear),
-                                    onPressed: () => setState(() => selectedDate = null),
-                                  ),
+                                SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        selectedDate == null
+                                            ? 'Filter by Date: All'
+                                            : 'Selected: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.calendar_today),
+                                      onPressed: () async {
+                                        final picked = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2020),
+                                          lastDate: DateTime(2030),
+                                        );
+                                        if (picked != null) {
+                                          setState(() => selectedDate = picked);
+                                        }
+                                      },
+                                    ),
+                                    if (selectedDate != null)
+                                      IconButton(
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () => setState(() => selectedDate = null),
+                                      ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+
+                          Consumer<VetProvider>(
+                            builder: (context, vetProvider, child) {
+                              if (vetProvider.isLoading) {
+                                return Center(child: CircularProgressIndicator());
+                              }
+
+                              if (vetProvider.error != null) {
+                                return Center(child: Text(vetProvider.error!));
+                              }
+
+                              return Column(
+                                children: _buildTodayAppointment(themeProvider, vetProvider.appointments),
+                              );
+                            },
+                          ),
+
+                          ..._buildAssignedPets(context, myAssignedPets),
+                          Consumer<MedicalRecordProvider>(
+                            builder: (context, medicalRecordProvider, child) {
+                              if (medicalRecordProvider.isLoading) {
+                                return Center(child: CircularProgressIndicator());
+                              }
+
+                              if (medicalRecordProvider.errorMessage != null) {
+                                return Center(child: Text(medicalRecordProvider.errorMessage!));
+                              }
+
+                              return Column(
+                                children: _buildMedicalRecords(context, medicalRecordProvider.medicalRecords),
+                              );
+                            },
+                          ),
+
+
+                        ],
                       ),
-
-                      ..._buildTodayAppointment(themeProvider, filteredAppointments),
-
-                      ..._buildAssignedPets(context, myAssignedPets),
-                      ..._buildMedicalRecords(context, medicalRecords),
-
-
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 SingleChildScrollView(
                   child: Column(
@@ -300,9 +254,9 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
                           constraints: BoxConstraints(
                             maxHeight: 800,
                           ),
-                          child: _buildAppointmentCalendar(context, appointments, availableSlots,
-                          ),
+                          child: _buildAppointmentCalendar(context, appointments, vetProvider.availableSlots),
                         ),
+                        
                       ],
                     ),
                   ),
@@ -421,7 +375,7 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
 
 
 
-  List<Widget> _buildAssignedPets(BuildContext context, List myPatients) {
+  List<Widget> _buildAssignedPets(BuildContext context, List<Pet> myPatients) {
     return [
       Padding(
         padding: EdgeInsets.only(left: 20.0, top: 30, bottom: 10),
@@ -459,18 +413,18 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
     ];
   }
 
-  Card _buildAssignedPetCard(Map<String, dynamic> pet, BuildContext context) {
+  Card _buildAssignedPetCard(Pet pet, BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       elevation: 2,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         leading: CircleAvatar(
-          backgroundImage: AssetImage(pet["photoUrl"]),
+          backgroundImage: NetworkImage(pet.photoUrl ?? ''),
           radius: 28,
         ),
         title: Text(
-          pet['name'],
+          pet.name,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -479,13 +433,13 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(pet['species'], style: const TextStyle(fontSize: 14)),
-            Text("Owner: ${pet['owner']}", style: const TextStyle(fontSize: 14)),
+            Text(pet.breed ?? '', style: const TextStyle(fontSize: 14)),
+            Text("Owner: ${pet.userId}", style: const TextStyle(fontSize: 14)),
           ],
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AssignedPetDetailsPage(assignedPet: pet),));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => AssignedPetDetailsPage(assignedPet: pet),));
         },
       ),
     );
@@ -578,8 +532,7 @@ class _VeterinarianDashboardState extends State<VeterinarianDashboard> {
   Widget _buildAppointmentCalendar(
       BuildContext context,
       List<Appointment> appointments,
-      List<DateTime> availableSlots,
-      ) {
+      List<DateTime> availableSlots) {
     DateTime _focusedDay = DateTime.now();
     DateTime? _selectedDay;
 

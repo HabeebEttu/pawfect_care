@@ -14,6 +14,9 @@ class VetProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
+  List<DateTime> _availableSlots = [];
+  List<DateTime> get availableSlots => _availableSlots;
+
   /// Fetch today's appointments for a given vet
   Future<void> fetchTodayAppointments(String vetId) async {
     _isLoading = true;
@@ -25,6 +28,21 @@ class VetProvider with ChangeNotifier {
       _appointments = await _vetService.fetchTodayAppointments(vetId);
     } catch (e) {
       _error = 'Failed to load appointments: $e';
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchAvailableSlots(String vetId) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _availableSlots = await _vetService.getAvailableSlots(vetId);
+    } catch (e) {
+      _error = 'Failed to load available slots: $e';
     }
 
     _isLoading = false;

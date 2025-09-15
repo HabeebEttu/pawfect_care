@@ -30,7 +30,7 @@ class AdoptionHistoryPage extends StatelessWidget {
         title: const Text('Adoption History'),
       ),
       body: FutureBuilder<List<AdoptionRecord>>(
-        future: AdoptionService().getAdoptionRecords(user.uid),
+        future: AdoptionService().getAdoptionRecordsForUser(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

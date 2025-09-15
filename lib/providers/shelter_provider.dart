@@ -10,10 +10,12 @@ class ShelterProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   AnimalShelter? _shelter;
+  List<AnimalShelter> _allShelters = [];
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   AnimalShelter? get shelter => _shelter;
+  List<AnimalShelter> get allShelters => _allShelters;
 
   void _setLoading(bool value) {
     _isLoading = value;
@@ -28,6 +30,18 @@ class ShelterProvider with ChangeNotifier {
   void _setShelter(AnimalShelter? shelter) {
     _shelter = shelter;
     notifyListeners();
+  }
+
+  Future<void> fetchAllShelters() async {
+    _setLoading(true);
+    _setErrorMessage(null);
+    try {
+      _allShelters = await _shelterService.fetchAllShelters();
+    } catch (e) {
+      _setErrorMessage(e.toString());
+    } finally {
+      _setLoading(false);
+    }
   }
 
   Future<void> addShelter(AnimalShelter shelter, User user) async {

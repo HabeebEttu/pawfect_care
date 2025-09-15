@@ -7,6 +7,9 @@ import 'package:pawfect_care/pages/blog_page.dart';
 import 'package:pawfect_care/providers/pet_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/providers/user_provider.dart';
+import 'package:pawfect_care/providers/medical_record_provider.dart';
+import 'package:pawfect_care/providers/vet_service_provider.dart';
+import 'package:pawfect_care/providers/appointment_provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
@@ -41,6 +44,16 @@ class MyApp extends StatelessWidget {
           create: (context) => PetProvider(Provider.of<AuthProvider>(context, listen: false)),
           update: (context, auth, previous) => PetProvider(auth),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, MedicalRecordProvider>(
+          create: (context) => MedicalRecordProvider(Provider.of<AuthProvider>(context, listen: false)),
+          update: (context, auth, previous) => MedicalRecordProvider(auth),
+        ),
+        ChangeNotifierProvider<VetProvider>(create: (_) => VetProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, AppointmentProvider>(
+          create: (context) => AppointmentProvider(Provider.of<AuthProvider>(context, listen: false)),
+          update: (context, auth, previous) => AppointmentProvider(auth),
+        ),
+        
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
