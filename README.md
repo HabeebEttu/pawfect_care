@@ -1,7 +1,7 @@
 # Pawfect care - Flutter Application
  Pawfectcare is a mobile application that allows pet owners to easily manage their pet health,
  vets to track appointments bookings with the pet owners and shelter admins 
- to follow adoption requests much quicker and efficient
+ to follow adoption requests much quicker and efficient.
 
 
 ## Table of Contents
@@ -14,10 +14,10 @@
 
 
 ## Project Overview
- Pawfect care is a premier mobile application designed to help proper management of pets around the world
+ Pawfect care is a premier mobile application designed to help proper management of pets around the world.
  With Pawfect care,users and pet owners can find out and learn more about how to manage their pt health and
  habits,vets can easily communicate with their clients and patients and shelter admins will no longer
- have to do one on one in-person sessions   for all adoption requests
+ have to do one on one in-person sessions  for all adoption requests
  
 ## Features
 - *Interactive UI*
@@ -45,8 +45,8 @@
     flutter run
 
 ## Usage
- - Register or Login and select the role that you are or play
- - Access detailed description and images unique to that role
+ - Register or Login and select the role that you are or will play.
+ - Access detailed description and information unique to that role
 
 ## Contributing
   We welcome contributions! To contribute:
