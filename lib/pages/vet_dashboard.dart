@@ -1,5 +1,4 @@
 
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:pawfect_care/pages/add_medical_record_form.dart";
 import "package:pawfect_care/pages/medical_record_details.dart";

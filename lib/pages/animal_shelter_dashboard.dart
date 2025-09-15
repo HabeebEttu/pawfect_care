@@ -6,7 +6,7 @@ import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:pawfect_care/models/adoption_status.dart';
-import 'package:pawfect_care/models/adoption_status.dart';
+
 
 class AnimalShelterDashboard extends StatefulWidget {
   const AnimalShelterDashboard({super.key});

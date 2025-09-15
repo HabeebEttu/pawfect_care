@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/pages/forgot_password_page.dart';
+import 'package:pawfect_care/role_wrapper.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
@@ -384,7 +385,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     password: _passwordController.text.trim(),
                   );
                   if (mounted && authProvider.user != null) {
-                    Navigator.pushReplacementNamed(context, AppRoutes.roleWrapper);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RoleWrapper()),
+                    );
 
                   } else if (mounted && authProvider.errorMessage != null) {
                     ScaffoldMessenger.of(context).showSnackBar(

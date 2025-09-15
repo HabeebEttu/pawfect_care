@@ -210,10 +210,9 @@ class _AddPetPageState extends State<AddPetPage> {
                       isSpecialNeeds: _isSpecialNeeds,
                       shelterId: '', // will be set by the backend
                     );
-                    // In a real app, you would save the newPet to your database
-                    print('New Pet Added: ${newPet.name}');
+
                     if (_photo != null) {
-                      print('Pet Photo Path: ${_photo!.path}');
+
                     }
                     Navigator.pop(context);
                   }

@@ -12,7 +12,6 @@ import 'package:pawfect_care/pages/edit_user_profile_page.dart';
 import 'package:pawfect_care/role_wrapper.dart';
 
 class AppRoutes {
-  // static const String splash = '/splash';
   static const String roleWrapper = '/';
   static const String login = '/login';
   static const String register = '/register';
@@ -27,8 +26,6 @@ class AppRoutes {
 
 
   static Map<String, WidgetBuilder> routes = {
-    // splash: (context) => const SplashScreen(),
-    roleWrapper: (context) => const RoleWrapper(),
     login: (context) => const LoginPage(),
     register: (context) => const RegisterPage(),
     medicalRecordsHistory: (context) => const MedicalRecordsHistoryPage(),

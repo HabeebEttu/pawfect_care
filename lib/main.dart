@@ -2,15 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
-import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
-import 'package:pawfect_care/pages/blog_page.dart';
-import 'package:pawfect_care/pages/register_page.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/role_wrapper.dart';
 import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:pawfect_care/firebase_options.dart';
-import 'package:pawfect_care/pages/login_page.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

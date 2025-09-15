@@ -165,7 +165,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
           Icon(
             Icons.pets,
             size: 48,
-            color: PawfectCareTheme.primaryBlue.withValues(alp
+            color: PawfectCareTheme.primaryBlue.withValues(alpha:
                 0.3),
           ),
         ],
@@ -438,8 +438,7 @@ class _AnimalShelterProfilePageState extends State<AnimalShelterProfilePage> {
                 contentPadding: const EdgeInsets.all(16),
                 leading: CircleAvatar(
                   radius: 24,
-                  backgroundColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0
-                      .1),
+                  backgroundColor: PawfectCareTheme.primaryBlue.withValues(alpha: 0.1),
                   child: Text(
                     userName[0],
                     style: TextStyle(
@@ -633,8 +632,7 @@ class SuccessStories extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0
-                        .7)],
+                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),

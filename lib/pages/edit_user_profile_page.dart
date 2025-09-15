@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:pawfect_care/models/user.dart';
 import 'package:pawfect_care/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 

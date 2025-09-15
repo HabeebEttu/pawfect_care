@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pawfect_care/providers/pet_store_provider.dart';
+
 
 class CategorySelector extends StatefulWidget {
   final List<String> categories;

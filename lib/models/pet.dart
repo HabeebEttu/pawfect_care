@@ -96,8 +96,8 @@ class Pet {
       'isSpayed': isSpayed,
       'isNeutered': isNeutered,
       'isSpecialNeeds': isSpecialNeeds,
-      'medicalRecords': medicalRecords.map((x) => (x as MedicalRecord).toMap()).toList(),
-      'appointments': appointments.map((x) => (x as Appointment).toMap()).toList(),
+      'medicalRecords': medicalRecords.map((x) => x.toMap()).toList(),
+      'appointments': appointments.map((x) => x.toMap()).toList(),
     };
   }
 
