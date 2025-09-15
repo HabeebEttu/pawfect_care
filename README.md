@@ -17,7 +17,7 @@
  Pawfect care is a premier mobile application designed to help proper management of pets around the world
  With Pawfect care,users and pet owners can find out and learn more about how to manage their pt health and
  habits,vets can easily communicate with their clients and patients and shelter admins will no longer
- have to do one on one for all adoption requests
+ have to do one on one in-person sessions   for all adoption requests
  
 ## Features
 - *Interactive UI*
@@ -30,13 +30,13 @@
  - *Cloud Storage*:Firebase
  - *Version Control*:Git 
 
-## Setups and Installation
+## Setup and Installation
 1. *Clone the repository*
    bash
    git pull https://github.com/HabeebEttu/pawfect_care.git    
    cd pawfect_care
 
-2. Upgrade dependencies
+2. *Upgrade dependencies*
    bash
    futter pub get
 
