@@ -33,7 +33,7 @@ class AppRoutes {
     adoptionManagement: (context) => const AdoptionManagementPage(),
     petDirectory: (context) => const PetDirectoryPage(),
     userAddPet: (context) => const UserAddPetPage(),
-    userEditPet: (context) => const UserEditPetPage(),
+    // userEditPet: (context) => const UserEditPetPage(),
     userPetDirectory: (context) => const UserPetDirectoryPage(),
     editUserProfile: (context) => const EditUserProfilePage(),
 
