@@ -56,6 +56,7 @@ class Appointment {
   /// Convert object to Firestore map
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'petId': petId,
       'vetId': vetId,
       'ownerId': ownerId,
@@ -68,9 +69,9 @@ class Appointment {
   }
 
   /// Create object from Firestore map
-  factory Appointment.fromMap(Map<String, dynamic> map, String id) {
+  factory Appointment.fromMap(Map<String, dynamic> map) {
     return Appointment(
-      id: id,
+      id: map['id'] as String,
       petId: map['petId'] as String,
       vetId: map['vetId'] as String,
       ownerId: map['ownerId'] as String,
@@ -89,8 +90,8 @@ class Appointment {
   /// JSON encode/decode helpers
   String toJson() => json.encode(toMap());
 
-  factory Appointment.fromJson(String source, String id) =>
-      Appointment.fromMap(json.decode(source) as Map<String, dynamic>, id);
+  factory Appointment.fromJson(String source) =>
+      Appointment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

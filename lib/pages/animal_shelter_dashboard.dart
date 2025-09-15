@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:pawfect_care/pages/add_pet_page.dart';
+import 'package:pawfect_care/providers/shelter_provider.dart';
 import 'package:pawfect_care/providers/theme_provider.dart';
 import 'package:pawfect_care/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
+import 'package:pawfect_care/models/adoption_status.dart';
+import 'package:pawfect_care/models/adoption_status.dart';
 
-class AnimalShelterDashboard extends StatelessWidget {
+class AnimalShelterDashboard extends StatefulWidget {
   const AnimalShelterDashboard({super.key});
 
   @override
+  State<AnimalShelterDashboard> createState() => _AnimalShelterDashboardState();
+}
+
+class _AnimalShelterDashboardState extends State<AnimalShelterDashboard> {
+  @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
+    // TODO: implement build
+     return 
+    Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -40,9 +51,14 @@ class AnimalShelterDashboard extends StatelessWidget {
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 16),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  child: Icon(Icons.person, color: Colors.white, size: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.editUserProfile);
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                    child: Icon(Icons.person, color: Colors.white, size: 20),
+                  ),
                 ),
               ),
             ],
@@ -113,14 +129,28 @@ class AnimalShelterDashboard extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             // Quick stats row
-                            Row(
-                              children: [
-                                _buildHeroStat('127', 'Total Pets', Icons.pets),
-                                const SizedBox(width: 20),
-                                _buildHeroStat('89', 'Available', Icons.home),
-                                const SizedBox(width: 20),
-                                _buildHeroStat('38', 'Adopted', Icons.favorite),
-                              ],
+                            Consumer<ShelterProvider>(
+                              builder: (context, shelterProvider, child) {
+                                if (shelterProvider.isLoading || shelterProvider.shelter == null) {
+                                  return const CircularProgressIndicator(); // Or a loading skeleton
+                                }
+
+                                final totalPets = shelterProvider.shelter!.animals.length;
+                                final adoptedPets = shelterProvider.shelter!.adoptionRecords
+                                    .where((record) => record.status == AdoptionStatus.approved)
+                                    .length;
+                                final availablePets = totalPets - adoptedPets;
+
+                                return Row(
+                                  children: [
+                                    _buildHeroStat(totalPets.toString(), 'Total Pets', Icons.pets),
+                                    const SizedBox(width: 20),
+                                    _buildHeroStat(availablePets.toString(), 'Available', Icons.home),
+                                    const SizedBox(width: 20),
+                                    _buildHeroStat(adoptedPets.toString(), 'Adopted', Icons.favorite),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -211,11 +241,12 @@ class AnimalShelterDashboard extends StatelessWidget {
                                 PawfectCareTheme.lightBlue,
                               ],
                               illustration: '✏️',
-                              onTap: () => _showActionDialog(
-                                context,
-                                'Update Pet Profile',
-                                'Navigate to Update Pet page',
-                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.editPetProfile,
+                                );
+                              },
                             ),
                             _buildActionCard(
                               context,
@@ -227,11 +258,12 @@ class AnimalShelterDashboard extends StatelessWidget {
                                 PawfectCareTheme.warningYellow.withOpacity(0.7),
                               ],
                               illustration: '❤️',
-                              onTap: () => _showActionDialog(
-                                context,
-                                'Adoption Center',
-                                'Navigate to Adoption Management',
-                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.adoptionManagement,
+                                );
+                              },
                             ),
                             _buildActionCard(
                               context,
@@ -245,11 +277,12 @@ class AnimalShelterDashboard extends StatelessWidget {
                                 ),
                               ],
                               illustration: '🏥',
-                              onTap: () => _showActionDialog(
-                                context,
-                                'Health Records',
-                                'Navigate to Medical Records',
-                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.medicalRecordsHistory,
+                                );
+                              },
                             ),
                             _buildActionCard(
                               context,
@@ -261,11 +294,12 @@ class AnimalShelterDashboard extends StatelessWidget {
                                 PawfectCareTheme.lightBlue,
                               ],
                               illustration: '🐱',
-                              onTap: () => _showActionDialog(
-                                context,
-                                'View All Pets',
-                                'Navigate to Pet Directory',
-                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.petDirectory,
+                                );
+                              },
                             ),
                             _buildActionCard(
                               context,
@@ -356,11 +390,14 @@ class AnimalShelterDashboard extends StatelessWidget {
               ],
             ),
             child: FloatingActionButton.extended(
-              onPressed: () => _showActionDialog(
-                context,
-                'Quick Add',
-                'Fast pet registration',
-              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddPetPage(),
+                  ),
+                );
+              },
               backgroundColor: Colors.transparent,
               elevation: 0,
               icon: const Icon(Icons.add, color: Colors.white),
@@ -373,6 +410,8 @@ class AnimalShelterDashboard extends StatelessWidget {
         );
       },
     );
+  }
+   
   }
 
   Widget _buildHeroStat(String value, String label, IconData icon) {
@@ -617,4 +656,4 @@ class AnimalShelterDashboard extends StatelessWidget {
       },
     );
   }
-}
+

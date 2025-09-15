@@ -9,7 +9,7 @@ class VetService {
   Stream<List<Appointment>> getAppointmentsStream() {
     return _firestore.collection('appointments').snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) => Appointment.fromMap(doc.data(), doc.id))
+          .map((doc) => Appointment.fromMap(doc.data()))
           .toList();
     });
   }
@@ -28,7 +28,7 @@ class VetService {
         .get();
 
     return snapshot.docs
-        .map((doc) => Appointment.fromMap(doc.data(), doc.id))
+        .map((doc) => Appointment.fromMap(doc.data()))
         .toList();
   }
 

@@ -3,11 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:pawfect_care/firebase_options.dart';
+import 'package:pawfect_care/pages/animal_shelter_dashboard.dart';
 import 'package:pawfect_care/pages/blog_page.dart';
+<<<<<<< HEAD
 import 'package:pawfect_care/pages/pet_owner_dashboard.dart';
 // import 'package:pawfect_care/pages/appointments/login_page.dart';
 import 'package:pawfect_care/providers/auth_provider.dart';
+=======
+import 'package:pawfect_care/providers/pet_provider.dart';
+>>>>>>> 58419df54383886f3dc51cae6117de83ad4d2be4
 import 'package:pawfect_care/providers/theme_provider.dart';
+import 'package:pawfect_care/providers/user_provider.dart';
+import 'package:pawfect_care/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -33,6 +40,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider()..initialize(),
         ),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, PetProvider>(
+          create: (context) => PetProvider(Provider.of<AuthProvider>(context, listen: false)),
+          update: (context, auth, previous) => PetProvider(auth),
+        ),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -50,8 +62,8 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getThemeData(context),
 
             title: "Pawfect Care",
-            home: BlogPage(),
-            routes: {"/login": (context) => const PetOwnerDashboard()},
+            home:AnimalShelterDashboard(),
+            routes: AppRoutes.routes,
           );
         },
       ),
