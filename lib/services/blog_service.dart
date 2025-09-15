@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawfect_care/models/articles.dart';
 
+import 'package:pawfect_care/models/article.dart';
+
 class PetStoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -9,7 +11,7 @@ class PetStoreService {
     return snapshot.docs.map((doc) => Articles.fromMap(doc.data())).toList();
   }
 }
-import 'package:pawfect_care/models/article.dart';
+
 
 class BlogService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
